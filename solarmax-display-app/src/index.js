@@ -9,7 +9,7 @@ import PowerMeter from './components/powerMeter'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <PowerMeter />
+    <PowerMeter power="1000"/>
   </React.StrictMode>
 );
 
