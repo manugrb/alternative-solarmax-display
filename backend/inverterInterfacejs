@@ -1,0 +1,5 @@
+import getRawInverterData from './datafetcher.js';
+
+getRawInverterData().then((value) => {
+    console.log(value);
+})
