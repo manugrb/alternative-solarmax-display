@@ -35,7 +35,3 @@ function getInverterJson(){
     return inverterJsonPromise;
 
 }
-
-getInverterJson().then((value) => {
-    console.log(value);
-});
