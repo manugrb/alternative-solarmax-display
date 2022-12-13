@@ -1,15 +1,16 @@
-import http from 'http';
-const port = 3001;
+import express from "express";
+import getInverterJson from "./inverterInterface.js";
+const app = express();
+const PORT = 3001;
 
-const server = http.createServer((req, res) => {
-    res.write('hello node');
-    res.end();
-});
+app.listen(PORT, () => {
+    console.log("it's alive on http://localhost:" + PORT);
+})
 
-server.listen(port, (error) => {
-    if(error){
-        console.error('something went wrong: ' + error);
-    }else{
-        console.log('Server is listening on port ' + port);
-    }
+app.get('/general', (req, res) => {
+    
+    getInverterJson().then((value) => {
+        res.status(200).send(value);
+    })
+
 });

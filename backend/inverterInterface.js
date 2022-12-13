@@ -35,3 +35,5 @@ function getInverterJson(){
     return inverterJsonPromise;
 
 }
+
+export default getInverterJson;
