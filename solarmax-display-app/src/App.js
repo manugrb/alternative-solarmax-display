@@ -1,23 +1,30 @@
 import logo from './logo.svg';
 import './App.css';
+import PowerMeter from './components/powerMeter';
+import { useEffect, useState } from 'react';
 
-function App() {
+
+const App = () => {
+
+  const [powerState, setPowerState] = useState("");
+
+  useEffect(() => {
+
+    fetch('http://127.0.0.1:3001/general').then((value) => {
+      return value.json();
+    }).then((value) => {
+
+      const solarData = value;
+      const solarPower = solarData.housePower;
+      setPowerState(solarPower);
+
+    });
+
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <PowerMeter power={powerState}/>
     </div>
   );
 }
