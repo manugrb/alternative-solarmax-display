@@ -8,7 +8,7 @@ app.use(
     cors({
         origin: "*"
     })
-)
+);
 
 app.listen(PORT, () => {
     console.log("it's alive on http://localhost:" + PORT);

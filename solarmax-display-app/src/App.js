@@ -15,7 +15,7 @@ const App = () => {
     }).then((value) => {
 
       const solarData = value;
-      const solarPower = solarData.housePower;
+      const solarPower = solarData.solarPower;
       setPowerState(solarPower);
 
     });
