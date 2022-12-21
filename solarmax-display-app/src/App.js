@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import PowerMeter from './components/powerMeter';
+import PowerMeter from './components/powerMeter/powerMeter';
 import { useEffect, useState } from 'react';
 
 
