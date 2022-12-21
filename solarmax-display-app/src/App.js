@@ -24,7 +24,32 @@ const App = () => {
 
   return (
     <div>
-      <PowerMeter power={powerState}/>
+
+      <div className="headingDiv">
+          <h1>Solar Monitor</h1>
+      </div>
+
+
+      <div>
+
+        <div className="generalInformation">
+          <h2>General information</h2>
+          <div>
+            <PowerMeter power={powerState} name={"Solar power"}/>
+          </div>
+        </div>
+
+        <div className="results">
+          <h2>results (not yet implemented)</h2>
+
+        </div>
+
+        <div className="impact">
+            <h2>Impact (not yet implemented)</h2>
+        </div>
+
+      </div>
+
     </div>
   );
 }

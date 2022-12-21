@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
 import './powerMeter.css'
 
-function setValue(power){
-
-    return power + "W";
-
-}
-
 const PowerMeter = (props) => {
-    return (<h1 className='PowerMeter'>{setValue(props.power)}</h1>);
+
+    function setValue(power){
+
+        return power + "W";
+    
+    }
+
+    return (
+        <div className="powerMeterContainer">
+            <label htmlFor="powerReadout">{props.name}</label>
+            <h1 id="powerReadout" className='PowerMeter'>{setValue(props.power)}</h1>
+        </div>
+    );
 }
  
 export default PowerMeter;
