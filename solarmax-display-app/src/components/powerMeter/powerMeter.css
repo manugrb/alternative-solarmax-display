@@ -2,8 +2,14 @@
     width: fit-content;
 }
 
+.powerMeterContainer label{
+    color: var(--font-color-mid-priority);
+    font-size: var(--descriptions-font-size);
+}
+
 .PowerMeter {
-    font-size: 32px;
+    font-size: var(--main-content-element-font-size);
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
+    color: var(--font-color-important);
 }

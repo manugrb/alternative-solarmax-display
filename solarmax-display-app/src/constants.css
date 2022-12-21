@@ -1,0 +1,14 @@
+:root{
+    --background-color: #090909;
+
+    --font-color-important: #ffffff;
+    --font-color-mid-priority: #f0f0f0;
+    --font-color-low-priority: #e6e6e6;
+
+    --heading-font-size: 42px;
+    --main-content-element-font-size: 36px;
+    --sub-heading-font-size: 32px;
+    --descriptions-font-size: 20px;
+    --mid-importance-font-size: 16px;
+    --unimportant-font-size: 12px;
+}

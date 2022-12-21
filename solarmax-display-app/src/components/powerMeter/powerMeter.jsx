@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import './powerMeter.css'
+import './powerMeter.css';
+import '../../constants.css';
 
 const PowerMeter = (props) => {
 
