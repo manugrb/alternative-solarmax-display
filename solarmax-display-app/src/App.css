@@ -2,3 +2,34 @@
   width: 100%;
   text-align: center;
 }
+
+.sectionsContainer{
+  display: flex;
+}
+
+.generalInformation{
+  width: 30%;
+  margin: 0.75%;
+  padding: 0.75%;
+  border-style: solid;
+  border-color: rgb(150, 150, 150);
+  border-width: 2px;
+}
+
+.results{
+  width: 30%;
+  margin: 0.75%;
+  padding: 0.75%;
+  border-style: solid;
+  border-color: rgb(150, 150, 150);
+  border-width: 2px;
+}
+
+.impact{
+  width: 30%;
+  margin: 0.75%;
+  padding: 0.75%;
+  border-style: solid;
+  border-color: rgb(150, 150, 150);
+  border-width: 2px;
+}

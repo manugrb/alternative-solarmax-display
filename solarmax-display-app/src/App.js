@@ -30,11 +30,11 @@ const App = () => {
       </div>
 
 
-      <div>
+      <div className="sectionsContainer">
 
         <div className="generalInformation">
           <h2>General information</h2>
-          <div>
+          <div className="powerMeterContainer">
             <PowerMeter power={powerState} name={"Solar power"}/>
           </div>
         </div>
