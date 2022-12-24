@@ -6,19 +6,39 @@ import { useEffect, useState } from 'react';
 
 const App = () => {
 
-  const [powerState, setPowerState] = useState("");
+  const [solarPowerState, setSolarPowerState] = useState("");
+  const [housePowerState, setHousePowerState] = useState("");
+  const [gridPowerState, setGridPowerState] = useState("");
+  let continouslyFetchingData = false;
 
   useEffect(() => {
 
-    fetch('http://127.0.0.1:3001/general').then((value) => {
-      return value.json();
-    }).then((value) => {
+    if(!continouslyFetchingData){
+     
+      setInterval(() => {
 
-      const solarData = value;
-      const solarPower = solarData.solarPower;
-      setPowerState(solarPower);
+        fetch('http://192.168.179.17:3001/general').then((value) => {
+          return value.json();
+        }).then((value) => {
 
-    });
+          const solarData = value;
+
+          const solarPower = solarData.solarPower;
+          setSolarPowerState(solarPower);
+
+          const housePower = solarData.housePower;
+          setHousePowerState(housePower);
+
+          const gridPower = solarData.gridPower;
+          setGridPowerState(gridPower);
+
+        });
+
+      }, 1000);
+
+      continouslyFetchingData = true;
+  
+    }
 
   }, []);
 
@@ -35,9 +55,9 @@ const App = () => {
         <div className="generalInformation">
           <h2>General information</h2>
           <div className="powerMeterContainer">
-            <PowerMeter power={powerState} name={"Solar power"}/>
-            <PowerMeter power={powerState} name={"House power"}/>
-            <PowerMeter power={powerState} name={"Grid power"}/>
+            <PowerMeter power={solarPowerState} name={"Solar power"}/>
+            <PowerMeter power={housePowerState} name={"House power"}/>
+            <PowerMeter power={gridPowerState} name={"Grid power"}/>
           </div>
         </div>
 
