@@ -1,5 +1,6 @@
 .powerMeterContainer{
     width: fit-content;
+    display: inline-block;
 }
 
 .powerMeterContainer label{

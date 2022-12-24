@@ -36,11 +36,13 @@ const App = () => {
           <h2>General information</h2>
           <div className="powerMeterContainer">
             <PowerMeter power={powerState} name={"Solar power"}/>
+            <PowerMeter power={powerState} name={"House power"}/>
+            <PowerMeter power={powerState} name={"Grid power"}/>
           </div>
         </div>
 
         <div className="results">
-          <h2>results (not yet implemented)</h2>
+          <h2>Results (not yet implemented)</h2>
 
         </div>
 
