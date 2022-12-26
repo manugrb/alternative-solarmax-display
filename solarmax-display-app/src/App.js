@@ -9,6 +9,7 @@ const App = () => {
   const [solarPowerState, setSolarPowerState] = useState("");
   const [housePowerState, setHousePowerState] = useState("");
   const [gridPowerState, setGridPowerState] = useState("");
+  const [batteryPowerState, setBatteryPowerState] = useState("");
   let continouslyFetchingData = false;
 
   useEffect(() => {
@@ -31,6 +32,9 @@ const App = () => {
 
           const gridPower = solarData.gridPower;
           setGridPowerState(gridPower);
+
+          const batteryPower = solarData.batteryPower;
+          setBatteryPowerState(batteryPower);
 
         });
 
@@ -58,6 +62,7 @@ const App = () => {
             <PowerMeter power={solarPowerState} name={"Solar power"}/>
             <PowerMeter power={housePowerState} name={"House power"}/>
             <PowerMeter power={gridPowerState} name={"Grid power"}/>
+            <PowerMeter power={batteryPowerState} name={"Battery Power"} />
           </div>
         </div>
 
