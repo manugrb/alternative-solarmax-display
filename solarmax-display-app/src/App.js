@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import PowerMeter from './components/powerMeter/powerMeter';
+import BatteryMonitor from './components/batteryMonitor/batteryMonitor';
 import { useEffect, useState } from 'react';
 
 
@@ -63,6 +64,8 @@ const App = () => {
             <PowerMeter power={housePowerState} name={"House power"}/>
             <PowerMeter power={gridPowerState} name={"Grid power"}/>
             <PowerMeter power={batteryPowerState} name={"Battery Power"} />
+
+            <BatteryMonitor />
           </div>
         </div>
 
