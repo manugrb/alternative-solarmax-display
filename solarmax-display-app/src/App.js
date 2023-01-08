@@ -7,11 +7,18 @@ import { useEffect, useState } from 'react';
 
 const App = () => {
 
-  const [solarPowerState, setSolarPowerState] = useState("");
-  const [housePowerState, setHousePowerState] = useState("");
-  const [gridPowerState, setGridPowerState] = useState("");
-  const [batteryPowerState, setBatteryPowerState] = useState("");
-  let continouslyFetchingData = false;
+    const [solarPowerState, setSolarPowerState] = useState("");
+    const [housePowerState, setHousePowerState] = useState("");
+    const [gridPowerState, setGridPowerState] = useState("");
+    const [batteryPowerState, setBatteryPowerState] = useState("");
+    const [batteryFill, setBatteryFill] = useState(0);
+    let continouslyFetchingData = false;
+
+  function getBatteryFillPercentage(batteryCharge, batteryCapacity){
+
+    return batteryCharge / batteryCapacity;
+
+  }
 
   useEffect(() => {
 
@@ -36,6 +43,11 @@ const App = () => {
 
           const batteryPower = solarData.batteryPower;
           setBatteryPowerState(batteryPower);
+
+          const batteryCharge = solarData.batteryCharge;
+          const batteryCapacity = solarData.batteryCapacity;
+          const batteryFill = getBatteryFillPercentage(batteryCharge, batteryCapacity);
+          setBatteryFill(batteryFill);
 
         });
 
@@ -65,7 +77,7 @@ const App = () => {
             <PowerMeter power={gridPowerState} name={"Grid power"}/>
             <PowerMeter power={batteryPowerState} name={"Battery Power"} />
 
-            <BatteryMonitor />
+            <BatteryMonitor batteryFill={batteryFill} />
           </div>
         </div>
 
