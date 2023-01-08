@@ -12,6 +12,8 @@ const App = () => {
     const [gridPowerState, setGridPowerState] = useState("");
     const [batteryPowerState, setBatteryPowerState] = useState("");
     const [batteryFill, setBatteryFill] = useState(0);
+
+    const [updateInterval, setUpdateInterval] = useState();
     let continouslyFetchingData = false;
 
   function getBatteryFillPercentage(batteryCharge, batteryCapacity){
@@ -24,37 +26,42 @@ const App = () => {
 
     if(!continouslyFetchingData){
      
-      setInterval(() => {
+        setUpdateInterval(setInterval(() => {
 
-        fetch('http://192.168.179.17:3001/general').then((value) => {
-          return value.json();
-        }).then((value) => {
+          fetch('http://192.168.179.17:3001/general').then((value) => {
+            return value.json();
+          }).then((value) => {
 
-          const solarData = value;
+            const solarData = value;
 
-          const solarPower = solarData.solarPower;
-          setSolarPowerState(solarPower);
+            const solarPower = solarData.solarPower;
+            setSolarPowerState(solarPower);
 
-          const housePower = solarData.housePower;
-          setHousePowerState(housePower);
+            const housePower = solarData.housePower;
+            setHousePowerState(housePower);
 
-          const gridPower = solarData.gridPower;
-          setGridPowerState(gridPower);
+            const gridPower = solarData.gridPower;
+            setGridPowerState(gridPower);
 
-          const batteryPower = solarData.batteryPower;
-          setBatteryPowerState(batteryPower);
+            const batteryPower = solarData.batteryPower;
+            setBatteryPowerState(batteryPower);
 
-          const batteryCharge = solarData.batteryCharge;
-          const batteryCapacity = solarData.batteryCapacity;
-          const batteryFill = getBatteryFillPercentage(batteryCharge, batteryCapacity);
-          setBatteryFill(batteryFill);
+            const batteryCharge = solarData.batteryCharge;
+            const batteryCapacity = solarData.batteryCapacity;
+            const batteryFill = getBatteryFillPercentage(batteryCharge, batteryCapacity);
+            setBatteryFill(batteryFill);
 
-        });
+          });
 
-      }, 1000);
+          }, 1000)
+        );
 
       continouslyFetchingData = true;
   
+    }
+
+    return () => {
+      clearInterval(updateInterval);
     }
 
   }, []);
