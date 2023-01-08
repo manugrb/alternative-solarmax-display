@@ -1,7 +1,12 @@
+:root{
+    --height: 150px;
+    --batteryPoleHeight: 50px;
+}
+
 .batteryMonitorWrapper{
     width: 100%;
     display: flex;
-    height: 150px;
+    height: var(--height);
 }
 
 .batteryBodyOutline{
@@ -13,13 +18,20 @@
 
 .batteryInfill{
     height: 100%;
-    background: greenyellow;
+    background: green;
+}
+
+.batteryFillText{
+    margin: 0;
+    line-height: var(--height);
+    font-size: 64px;
+    text-align: center;
 }
 
 .batteryPoleOutline{
     width: 5%;
-    height: 33%;
-    margin-top: 50px;
+    height: var(--batteryPoleHeight);
+    margin-top: calc((var(--height) - var(--batteryPoleHeight)) / 2);
     border: solid;
     border-color: #ffffff;
     border-width: 3px 3px 3px 0px;
