@@ -15,16 +15,26 @@ const con = mysql.createConnection({
     password: password
 });
 
-con.connect(function(err) {
-    if (err) throw err;
-    console.log("Connected!");
-    setupDatabaseConnection().then(() => {
-        console.log("setup complete");
-    }, (reason) => {
-        console.error(reason);
-    })
-    
-});
+function connect(){
+
+    const connectionPromise = new Promise((resolve, reject) => {
+
+        con.connect(function(err) {
+            if (err) throw err;
+            console.log("Connected!");
+            setupDatabaseConnection().then(() => {
+                resolve();
+            }, (reason) => {
+                reject(reason);
+            })
+            
+        });
+
+    });
+
+    return connectionPromise;
+
+}
 
 function setupDatabaseConnection(){
 
@@ -43,7 +53,15 @@ function setupDatabaseConnection(){
                     throw err;
                 }                
               
-                const createTableSQL = "CREATE TABLE IF NOT EXISTS " + inverterDataTableName + " (time TIMESTAMP, solarPower SMALLINT UNSIGNED, housePower SMALLINT, gridPower SMALLINT, batteryPower SMALLINT, batteryCharge SMALLINT UNSIGNED, batteryCapacity SMALLINT);";
+                const tableColumns = "time TIMESTAMP,\
+                    solarPower SMALLINT UNSIGNED,\
+                    housePower SMALLINT,\
+                    gridPower SMALLINT,\
+                    batteryPower SMALLINT,\
+                    batteryCharge SMALLINT UNSIGNED,\
+                    batteryCapacity SMALLINT";
+
+                const createTableSQL = "CREATE TABLE IF NOT EXISTS " + inverterDataTableName + " (" + tableColumns  + ");";
                 con.query(createTableSQL, function(err, result){
                     if(err){
                         reject(err);
