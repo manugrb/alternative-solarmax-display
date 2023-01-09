@@ -106,3 +106,74 @@ function createNewInverterEntry(inverterData){
 }
 
 exports.createNewInverterEntry = createNewInverterEntry;
+
+
+function getEntriesInInterval(firstMoment, intervalLength){
+
+    const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > FROM_UNIXTIME(${firstMoment}) AND time < DATE_ADD(FROM_UNIXTIME(${firstMoment}), INTERVAL ${intervalLength} SECOND);`;
+    console.log(selectEntriesSQL);
+
+    con.query(selectEntriesSQL, function(err, result){
+        if(err){
+            throw err;
+        }
+
+        console.log(result);
+    });
+
+}
+
+exports.getEntriesInInterval = getEntriesInInterval;
+
+function getEntriesBetweenMoments(firstMoment, lastMoment){
+
+    const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > FROM_UNIXTIME(${firstMoment}) AND time < FROM_UNIXTIME(${lastMoment});`;
+    console.log(selectEntriesSQL);
+
+    con.query(selectEntriesSQL, function(err, result){
+        if(err){
+            throw err;
+        }
+
+        console.log(result);
+    });
+
+}
+
+exports.getEntriesBetweenMoments = getEntriesBetweenMoments;
+
+
+function getEntriesOfLastTime(intervalLength){
+
+    const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > DATE_SUB(NOW()), INTERVAL ${intervalLength} SECOND);`;
+    console.log(selectEntriesSQL);
+
+    con.query(selectEntriesSQL, function(err, result){
+        if(err){
+            throw err;
+        }
+
+        console.log(result);
+    });
+
+}
+
+exports.getEntriesOfLastTime = getEntriesOfLastTime;
+
+
+function getEntriesSince(firstMoment){
+
+    const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > FROM_UNIXTIME(${firstMoment}) AND time < NOW();`;
+    console.log(selectEntriesSQL);
+
+    con.query(selectEntriesSQL, function(err, result){
+        if(err){
+            throw err;
+        }
+
+        console.log(result);
+    });
+
+}
+
+exports.getEntriesSince = getEntriesSince;
