@@ -1,6 +1,8 @@
-import express from "express";
-import cors from "cors";
-import getInverterJson from "./inverterInterface.js";
+const express = require("express");
+const cors = require("cors");
+const inverterInterface = require("./inverterInterface");
+const {prepareForTracking, startAllIntervals} = require("./backgroundDataTracker.js");
+
 const app = express();
 const PORT = 3001;
 
@@ -16,8 +18,14 @@ app.listen(PORT, () => {
 
 app.get('/general', (req, res) => {
     
-    getInverterJson().then((value) => {
+    inverterInterface.getInverterJson().then((value) => {
         res.status(200).send(value);
     })
 
 });
+
+prepareForTracking().then(() => {
+    startAllIntervals();
+}, (reason) => {
+    console.error(reason);
+})

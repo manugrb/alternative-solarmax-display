@@ -1,5 +1,5 @@
-import mysql from "mysql";
-import dotenv from "dotenv";
+const mysql = require("mysql");
+const dotenv = require("dotenv");
 dotenv.config();
 
 const inverterDataTableName = "inverterData";
@@ -35,6 +35,8 @@ function connect(){
     return connectionPromise;
 
 }
+
+exports.connect = connect;
 
 function setupDatabaseConnection(){
 

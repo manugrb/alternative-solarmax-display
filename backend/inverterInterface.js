@@ -1,10 +1,10 @@
-import getRawInverterData from './datafetcher.js';
+const datafetcher = require('./datafetcher.js');
 
 function getInverterJson(){
 
     const inverterJsonPromise = new Promise((resolve, reject) => {
 
-        getRawInverterData().then((value) => {
+        datafetcher.getRawInverterData().then((value) => {
 
             const rawData = value;
             const rawDataPieces = rawData.split("%");
@@ -36,4 +36,4 @@ function getInverterJson(){
 
 }
 
-export default getInverterJson;
+exports.getInverterJson = getInverterJson;
