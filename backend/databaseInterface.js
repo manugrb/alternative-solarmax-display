@@ -1,5 +1,5 @@
-import mysql from "mysql";
-import dotenv from "dotenv";
+const mysql = require("mysql");
+const dotenv = require("dotenv");
 dotenv.config();
 
 const inverterDataTableName = "inverterData";
@@ -15,16 +15,28 @@ const con = mysql.createConnection({
     password: password
 });
 
-con.connect(function(err) {
-    if (err) throw err;
-    console.log("Connected!");
-    setupDatabaseConnection().then(() => {
-        console.log("setup complete");
-    }, (reason) => {
-        console.error(reason);
-    })
-    
-});
+function connect(){
+
+    const connectionPromise = new Promise((resolve, reject) => {
+
+        con.connect(function(err) {
+            if (err) throw err;
+            console.log("Connected!");
+            setupDatabaseConnection().then(() => {
+                resolve();
+            }, (reason) => {
+                reject(reason);
+            })
+            
+        });
+
+    });
+
+    return connectionPromise;
+
+}
+
+exports.connect = connect;
 
 function setupDatabaseConnection(){
 
@@ -43,7 +55,15 @@ function setupDatabaseConnection(){
                     throw err;
                 }                
               
-                const createTableSQL = "CREATE TABLE IF NOT EXISTS " + inverterDataTableName + " (time TIMESTAMP, solarPower SMALLINT UNSIGNED, housePower SMALLINT, gridPower SMALLINT, batteryPower SMALLINT, batteryCharge SMALLINT UNSIGNED, batteryCapacity SMALLINT);";
+                const tableColumns = "time TIMESTAMP,\
+                    solarPower SMALLINT UNSIGNED,\
+                    housePower SMALLINT,\
+                    gridPower SMALLINT,\
+                    batteryPower SMALLINT,\
+                    batteryCharge SMALLINT UNSIGNED,\
+                    batteryCapacity SMALLINT";
+
+                const createTableSQL = "CREATE TABLE IF NOT EXISTS " + inverterDataTableName + " (" + tableColumns  + ");";
                 con.query(createTableSQL, function(err, result){
                     if(err){
                         reject(err);
@@ -62,3 +82,98 @@ function setupDatabaseConnection(){
     return setupPromise;
 
 }
+
+function createNewInverterEntry(inverterData){
+
+    const solarPower = inverterData.solarPower;
+    const housePower = inverterData.housePower;
+    const gridPower = inverterData.gridPower;
+    const batteryPower = inverterData.batteryPower;
+    const batteryCharge = inverterData.batteryCharge;
+    const batteryCapacity = inverterData.batteryCapacity;
+
+    const newEntrySQL = `INSERT INTO ${inverterDataTableName} (solarPower, housePower, gridPower, batteryPower, batteryCharge, batteryCapacity) VALUES (${solarPower}, ${housePower}, ${gridPower}, ${batteryPower}, ${batteryCharge}, ${batteryCapacity});`
+
+    con.query(newEntrySQL, function(err, result){
+        if(err){
+            throw err;
+        }
+
+        console.log(result);
+
+    });
+
+}
+
+exports.createNewInverterEntry = createNewInverterEntry;
+
+
+function getEntriesInInterval(firstMoment, intervalLength){
+
+    const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > FROM_UNIXTIME(${firstMoment}) AND time < DATE_ADD(FROM_UNIXTIME(${firstMoment}), INTERVAL ${intervalLength} SECOND);`;
+    console.log(selectEntriesSQL);
+
+    con.query(selectEntriesSQL, function(err, result){
+        if(err){
+            throw err;
+        }
+
+        console.log(result);
+    });
+
+}
+
+exports.getEntriesInInterval = getEntriesInInterval;
+
+function getEntriesBetweenMoments(firstMoment, lastMoment){
+
+    const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > FROM_UNIXTIME(${firstMoment}) AND time < FROM_UNIXTIME(${lastMoment});`;
+    console.log(selectEntriesSQL);
+
+    con.query(selectEntriesSQL, function(err, result){
+        if(err){
+            throw err;
+        }
+
+        console.log(result);
+    });
+
+}
+
+exports.getEntriesBetweenMoments = getEntriesBetweenMoments;
+
+
+function getEntriesOfLastTime(intervalLength){
+
+    const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > DATE_SUB(NOW()), INTERVAL ${intervalLength} SECOND);`;
+    console.log(selectEntriesSQL);
+
+    con.query(selectEntriesSQL, function(err, result){
+        if(err){
+            throw err;
+        }
+
+        console.log(result);
+    });
+
+}
+
+exports.getEntriesOfLastTime = getEntriesOfLastTime;
+
+
+function getEntriesSince(firstMoment){
+
+    const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > FROM_UNIXTIME(${firstMoment}) AND time < NOW();`;
+    console.log(selectEntriesSQL);
+
+    con.query(selectEntriesSQL, function(err, result){
+        if(err){
+            throw err;
+        }
+
+        console.log(result);
+    });
+
+}
+
+exports.getEntriesSince = getEntriesSince;
