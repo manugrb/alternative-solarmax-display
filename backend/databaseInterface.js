@@ -82,3 +82,27 @@ function setupDatabaseConnection(){
     return setupPromise;
 
 }
+
+function createNewInverterEntry(inverterData){
+
+    const solarPower = inverterData.solarPower;
+    const housePower = inverterData.housePower;
+    const gridPower = inverterData.gridPower;
+    const batteryPower = inverterData.batteryPower;
+    const batteryCharge = inverterData.batteryCharge;
+    const batteryCapacity = inverterData.batteryCapacity;
+
+    const newEntrySQL = `INSERT INTO ${inverterDataTableName} (solarPower, housePower, gridPower, batteryPower, batteryCharge, batteryCapacity) VALUES (${solarPower}, ${housePower}, ${gridPower}, ${batteryPower}, ${batteryCharge}, ${batteryCapacity});`
+
+    con.query(newEntrySQL, function(err, result){
+        if(err){
+            throw err;
+        }
+
+        console.log(result);
+
+    });
+
+}
+
+exports.createNewInverterEntry = createNewInverterEntry;

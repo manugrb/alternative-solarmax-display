@@ -1,4 +1,5 @@
 const connect = require("./databaseInterface.js");
+const { getInverterJson } = require("./inverterInterface.js");
 
 let inverterDataTrackingInterval;
 
@@ -27,6 +28,13 @@ function stopAllIntervals(){
 function startInverterDataTrackingInterval(){
     inverterDataTrackingInterval = setInterval(() => {
         console.log('tracking' + inverterDataTrackingTimeInterval);
+
+        getInverterJson().then((value) => {
+            
+            connect.createNewInverterEntry(value);
+
+        });
+
     }, Number.parseInt(inverterDataTrackingTimeInterval));
 }
 
