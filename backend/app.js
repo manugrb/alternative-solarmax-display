@@ -3,7 +3,7 @@ const cors = require("cors");
 const inverterInterface = require("./inverterInterface");
 const {prepareForTracking, startAllIntervals} = require("./backgroundDataTracker.js");
 const { getEntriesSince, getEntriesBetweenMoments, getEntriesInInterval } = require("./databaseInterface");
-const { getProducedEnergyToday, getProducedEnergyThisMonth, getProducedEnergyThisYear } = require("./databaseDataAdapter");
+const { getProducedEnergyToday, getProducedEnergyThisMonth, getProducedEnergyThisYear, getUsedEnergyToday, getUsedEnergyThisMonth, getUsedEnergyThisYear } = require("./databaseDataAdapter");
 
 const app = express();
 const PORT = 3001;
@@ -104,6 +104,40 @@ app.get('/producedPower', (req, res) => {
         
         case "year":
             getDataPromise = getProducedEnergyThisYear();
+            break;
+
+        default:
+            console.error("wrong timeframe parameter!");
+            res.status(400).send("Wrong timeframe parameter! ");
+            return;
+
+    }
+
+    getDataPromise.then((value) => {
+        res.status(200).send(value);
+    }, (reason) => {
+        res.status(500).send(reason);
+    });
+
+});
+
+app.get('/usedPower', (req, res) => {
+
+    const timeframe = req.query.timeframe;
+    
+    let getDataPromise;
+    switch(timeframe){
+
+        case "today":
+            getDataPromise = getUsedEnergyToday();
+            break;
+        
+        case "month":
+            getDataPromise = getUsedEnergyThisMonth();
+            break;
+        
+        case "year":
+            getDataPromise = getUsedEnergyThisYear();
             break;
 
         default:

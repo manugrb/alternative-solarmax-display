@@ -1,8 +1,38 @@
-const { getEntriesInInterval, solarPowerColumnName } = require("./databaseInterface");
+const { getEntriesInInterval, solarPowerColumnName, housePowerColumnName } = require("./databaseInterface");
 
 const inverterDataTrackingTimeInterval = Number.parseInt(process.env.INVERTER_DATA_TRACKING_INTERVAL);
 
 function getProducedEnergyToday(){
+    return getSomeEnergyToday(solarPowerColumnName)
+}
+exports.getProducedEnergyToday = getProducedEnergyToday;
+
+function getProducedEnergyThisMonth(){
+    return getSomeEnergyThisMonth(solarPowerColumnName);
+}
+exports.getProducedEnergyThisMonth = getProducedEnergyThisMonth;
+
+function getProducedEnergyThisYear(){
+    return getSomeEnergyThisYear(solarPowerColumnName);
+}
+exports.getProducedEnergyThisYear = getProducedEnergyThisYear;
+
+function getUsedEnergyToday(){
+    return getSomeEnergyToday(housePowerColumnName);
+}
+exports.getUsedEnergyToday = getUsedEnergyToday;
+
+function getUsedEnergyThisMonth(){
+    return getSomeEnergyThisMonth(housePowerColumnName);
+}
+exports.getUsedEnergyThisMonth = getUsedEnergyThisMonth;
+
+function getUsedEnergyThisYear(){
+    return getSomeEnergyThisYear(housePowerColumnName);
+}
+exports.getUsedEnergyThisYear = getUsedEnergyThisYear;
+
+function getSomeEnergyToday(columnName){
 
     const resultPromise = new Promise((resolve, reject) => {
 
@@ -10,7 +40,7 @@ function getProducedEnergyToday(){
         const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const firstMomentTimestamp = Math.round(startOfDay / 1000);
     
-        getProducedEnergySince(firstMomentTimestamp).then((value) => {
+        getSomeEnergySince(firstMomentTimestamp, columnName).then((value) => {
             resolve(value);
         }, (reason) => {
             reject(reason);
@@ -21,9 +51,8 @@ function getProducedEnergyToday(){
     return resultPromise;
 
 }
-exports.getProducedEnergyToday = getProducedEnergyToday;
 
-function getProducedEnergyThisMonth(){
+function getSomeEnergyThisMonth(columnName){
 
     const resultPromise = new Promise((resolve, reject) => {
 
@@ -31,7 +60,7 @@ function getProducedEnergyThisMonth(){
         const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
         const firstMomentTimestamp = Math.round(startOfMonth / 1000);
     
-        getProducedEnergySince(firstMomentTimestamp).then((value) => {
+        getSomeEnergySince(firstMomentTimestamp, columnName).then((value) => {
             resolve(value);
         }, (reason) => {
             reject(reason);
@@ -41,11 +70,9 @@ function getProducedEnergyThisMonth(){
 
     return resultPromise;
 
-    
 }
-exports.getProducedEnergyThisMonth = getProducedEnergyThisMonth;
 
-function getProducedEnergyThisYear(){
+function getSomeEnergyThisYear(columnName){
 
     const resultPromise = new Promise((resolve, reject) => {
 
@@ -53,7 +80,7 @@ function getProducedEnergyThisYear(){
         const startOfYear = new Date(now.getFullYear(), 0, 1);
         const firstMomentTimestamp = Math.round(startOfYear / 1000);
     
-        getProducedEnergySince(firstMomentTimestamp).then((value) => {
+        getSomeEnergySince(firstMomentTimestamp, columnName).then((value) => {
             resolve(value);
         }, (reason) => {
             reject(reason);
@@ -64,24 +91,13 @@ function getProducedEnergyThisYear(){
     return resultPromise;
 
 }
-exports.getProducedEnergyThisYear = getProducedEnergyThisYear;
 
-
-function getProducedEnergySince(firstMoment){
+function getSomeEnergySince(firstMoment, columnName){
 
     const nowTimestamp = Math.round(Date.now() / 1000);
-    return getProducedEnergy(firstMoment, nowTimestamp);
+    return getEnergy(firstMoment, nowTimestamp, columnName);
 
 }
-
-function getProducedEnergy(firstMoment, lastMoment){
-
-    return getEnergy(firstMoment, lastMoment, solarPowerColumnName);
-
-}
-
-exports.getProducedEnergy = getProducedEnergy;
-
 
 function getEnergy(firstMoment, lastMoment, columnName){
 
