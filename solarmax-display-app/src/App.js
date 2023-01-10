@@ -3,6 +3,7 @@ import './App.css';
 import PowerMeter from './components/powerMeter/powerMeter';
 import BatteryMonitor from './components/batteryMonitor/batteryMonitor';
 import { useEffect, useState } from 'react';
+import EnergyMeter from './components/energyMeter/energyMeter';
 
 
 const App = () => {
@@ -89,7 +90,12 @@ const App = () => {
         </div>
 
         <div className="results">
-          <h2>Results (not yet implemented)</h2>
+          <h2>Results</h2>
+
+          <div className="energyMeterContainer">
+            <EnergyMeter energy={60000} name={"Todays' Solar Energy"} />
+            <EnergyMeter energy={10000} name={"Todays' Used Energy"} />
+          </div>
 
         </div>
 

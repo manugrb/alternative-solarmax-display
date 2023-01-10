@@ -13,12 +13,14 @@
     width: 95%;
     height: 100%;
     border: solid;
+    border-radius: 8px;
     border-color: #ffffff;
 }
 
 .batteryInfill{
     height: 100%;
     background: green;
+    border-radius: 6px 4px 4px 6px;
 }
 
 .batteryFillText{
@@ -33,6 +35,7 @@
     height: var(--batteryPoleHeight);
     margin-top: calc((var(--height) - var(--batteryPoleHeight)) / 2);
     border: solid;
+    border-radius: 0px 8px 8px 0px;
     border-color: #ffffff;
     border-width: 3px 3px 3px 0px;
 }

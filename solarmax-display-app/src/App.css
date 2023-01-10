@@ -41,6 +41,18 @@
   text-align: center;
 }
 
+.energyMeterContainer{
+  display: flex;
+  text-align: center;
+}
+
+*.energyMeterContainer{
+  text-align: center;
+  display: inline-block;
+  width: min-content;
+  margin: 4px 24px;
+}
+
 .impact{
   width: 30%;
   margin: 0.75%;
