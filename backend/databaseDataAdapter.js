@@ -28,7 +28,7 @@ function getUsedEnergyThisMonth(){
 exports.getUsedEnergyThisMonth = getUsedEnergyThisMonth;
 
 function getUsedEnergyThisYear(){
-    return getSomeEnergyThisYear(housePowerColumnName);
+    getSomeEnergyThisYear(housePowerColumnName);
 }
 exports.getUsedEnergyThisYear = getUsedEnergyThisYear;
 
@@ -115,11 +115,8 @@ function getEnergy(firstMoment, lastMoment, columnName){
             }
 
             totalPower = Math.round(totalPower);
-            const responseObject = {
-                producedPower: totalPower
-            }
-
-            resolve(responseObject);
+            
+            resolve(totalPower);
             
         }, (reason) => {
             reject(reason);

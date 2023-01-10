@@ -14,7 +14,11 @@ const App = () => {
     const [batteryPowerState, setBatteryPowerState] = useState("");
     const [batteryFill, setBatteryFill] = useState(0);
 
+    const [producedEnergyState, setProducedEnergyState] = useState(0);
+    const [usedEnergyState, setUsedEnergyState] = useState(0);
+
     const [updateInterval, setUpdateInterval] = useState();
+    const [energyUpdateInterval, setEnergyUpdateInterval] = useState();
     let continouslyFetchingData = false;
 
   function getBatteryFillPercentage(batteryCharge, batteryCapacity){
@@ -25,11 +29,20 @@ const App = () => {
 
   useEffect(() => {
 
+    updateEnergyValues();
+
     if(!continouslyFetchingData){
+
+        setEnergyUpdateInterval(setInterval(() => {
+
+          updateEnergyValues();
+
+        }, 60 * 10 * 1000));
      
         setUpdateInterval(setInterval(() => {
 
           fetch('http://192.168.179.17:3001/general').then((value) => {
+            console.log(value);
             return value.json();
           }).then((value) => {
 
@@ -63,9 +76,28 @@ const App = () => {
 
     return () => {
       clearInterval(updateInterval);
+      clearInterval(energyUpdateInterval);
     }
 
   }, []);
+
+  function updateEnergyValues(){
+
+    fetch('http://192.168.179.17:3001/producedPower?timeframe=today').then((value) => {
+      console.log(value);
+      return value.json();
+    }).then((value) => {
+      setProducedEnergyState(value["producedEnergy"]);
+    });
+
+
+    fetch('http://192.168.179.17:3001/usedPower?timeframe=today').then((value) => {
+      return value.json();
+    }).then((value) => {
+      setUsedEnergyState(value["usedEnergy"]);
+    });
+
+  }
 
   return (
     <div>
@@ -93,8 +125,8 @@ const App = () => {
           <h2>Results</h2>
 
           <div className="energyMeterContainer">
-            <EnergyMeter energy={60000} name={"Todays' Solar Energy"} />
-            <EnergyMeter energy={10000} name={"Todays' Used Energy"} />
+            <EnergyMeter energy={producedEnergyState} name={"Todays' Solar Energy"} />
+            <EnergyMeter energy={usedEnergyState} name={"Todays' Used Energy"} />
           </div>
 
         </div>

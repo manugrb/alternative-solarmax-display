@@ -114,7 +114,10 @@ app.get('/producedPower', (req, res) => {
     }
 
     getDataPromise.then((value) => {
-        res.status(200).send(value);
+        const responseObject = {
+            producedEnergy: value
+        }
+        res.status(200).send(responseObject);
     }, (reason) => {
         res.status(500).send(reason);
     });
@@ -148,7 +151,10 @@ app.get('/usedPower', (req, res) => {
     }
 
     getDataPromise.then((value) => {
-        res.status(200).send(value);
+        const responseObject = {
+            usedEnergy: value
+        }
+        res.status(200).send(responseObject);
     }, (reason) => {
         res.status(500).send(reason);
     })
