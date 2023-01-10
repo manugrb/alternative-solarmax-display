@@ -3,7 +3,7 @@ const cors = require("cors");
 const inverterInterface = require("./inverterInterface");
 const {prepareForTracking, startAllIntervals} = require("./backgroundDataTracker.js");
 const { getEntriesSince, getEntriesBetweenMoments, getEntriesInInterval } = require("./databaseInterface");
-const { getProducedEnergyToday } = require("./databaseDataAdapter");
+const { getProducedEnergyToday, getProducedEnergyThisMonth, getProducedEnergyThisYear } = require("./databaseDataAdapter");
 
 const app = express();
 const PORT = 3001;
@@ -99,9 +99,11 @@ app.get('/producedPower', (req, res) => {
             break;
         
         case "month":
+            getDataPromise = getProducedEnergyThisMonth();
             break;
         
         case "year":
+            getDataPromise = getProducedEnergyThisYear();
             break;
 
         default:

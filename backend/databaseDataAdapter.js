@@ -10,9 +10,7 @@ function getProducedEnergyToday(){
         const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const firstMomentTimestamp = Math.round(startOfDay / 1000);
     
-        const nowTimestamp = Math.round(Date.now() / 1000);
-    
-        getProducedEnergy(firstMomentTimestamp, nowTimestamp).then((value) => {
+        getProducedEnergySince(firstMomentTimestamp).then((value) => {
             resolve(value);
         }, (reason) => {
             reject(reason);
@@ -23,20 +21,80 @@ function getProducedEnergyToday(){
     return resultPromise;
 
 }
-
 exports.getProducedEnergyToday = getProducedEnergyToday;
 
-function getProducedEnergy(firstMoment, lastMoment){
+function getProducedEnergyThisMonth(){
 
     const resultPromise = new Promise((resolve, reject) => {
 
-        getEntriesInInterval(firstMoment, lastMoment, solarPowerColumnName).then((value) => {
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const firstMomentTimestamp = Math.round(startOfMonth / 1000);
+    
+        getProducedEnergySince(firstMomentTimestamp).then((value) => {
+            resolve(value);
+        }, (reason) => {
+            reject(reason);
+        });
+
+    });
+
+    return resultPromise;
+
+    
+}
+exports.getProducedEnergyThisMonth = getProducedEnergyThisMonth;
+
+function getProducedEnergyThisYear(){
+
+    const resultPromise = new Promise((resolve, reject) => {
+
+        const now = new Date();
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        const firstMomentTimestamp = Math.round(startOfYear / 1000);
+    
+        getProducedEnergySince(firstMomentTimestamp).then((value) => {
+            resolve(value);
+        }, (reason) => {
+            reject(reason);
+        });
+
+    });
+
+    return resultPromise;
+
+}
+exports.getProducedEnergyThisYear = getProducedEnergyThisYear;
+
+
+function getProducedEnergySince(firstMoment){
+
+    const nowTimestamp = Math.round(Date.now() / 1000);
+    return getProducedEnergy(firstMoment, nowTimestamp);
+
+}
+
+function getProducedEnergy(firstMoment, lastMoment){
+
+    return getEnergy(firstMoment, lastMoment, solarPowerColumnName);
+
+}
+
+exports.getProducedEnergy = getProducedEnergy;
+
+
+function getEnergy(firstMoment, lastMoment, columnName){
+
+    const resultPromise = new Promise((resolve, reject) => {
+
+        getEntriesInInterval(firstMoment, lastMoment, columnName).then((value) => {
 
             // resolve(value);
             let totalPower = 0;
+
             for(entry of value){
                 
-                totalPower += entry[solarPowerColumnName] / (inverterDataTrackingTimeInterval / 1000);
+                totalPower += entry[columnName] / (inverterDataTrackingTimeInterval / 1000);
                 
             }
 
@@ -56,5 +114,3 @@ function getProducedEnergy(firstMoment, lastMoment){
     return resultPromise;
 
 }
-
-exports.getProducedEnergy = getProducedEnergy;
