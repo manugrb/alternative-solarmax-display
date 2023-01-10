@@ -85,23 +85,30 @@ function setupDatabaseConnection(){
 
 function createNewInverterEntry(inverterData){
 
-    const solarPower = inverterData.solarPower;
-    const housePower = inverterData.housePower;
-    const gridPower = inverterData.gridPower;
-    const batteryPower = inverterData.batteryPower;
-    const batteryCharge = inverterData.batteryCharge;
-    const batteryCapacity = inverterData.batteryCapacity;
+    const resultPromise = new Promise((resolve, reject) => {
 
-    const newEntrySQL = `INSERT INTO ${inverterDataTableName} (solarPower, housePower, gridPower, batteryPower, batteryCharge, batteryCapacity) VALUES (${solarPower}, ${housePower}, ${gridPower}, ${batteryPower}, ${batteryCharge}, ${batteryCapacity});`
-
-    con.query(newEntrySQL, function(err, result){
-        if(err){
-            throw err;
-        }
-
-        console.log(result);
-
+        const solarPower = inverterData.solarPower;
+        const housePower = inverterData.housePower;
+        const gridPower = inverterData.gridPower;
+        const batteryPower = inverterData.batteryPower;
+        const batteryCharge = inverterData.batteryCharge;
+        const batteryCapacity = inverterData.batteryCapacity;
+    
+        const newEntrySQL = `INSERT INTO ${inverterDataTableName} (solarPower, housePower, gridPower, batteryPower, batteryCharge, batteryCapacity) VALUES (${solarPower}, ${housePower}, ${gridPower}, ${batteryPower}, ${batteryCharge}, ${batteryCapacity});`
+    
+        con.query(newEntrySQL, function(err, result){
+            if(err){
+                reject(err);
+                throw err;
+            }
+    
+            resolve(result);
+    
+        });
+        
     });
+
+    return resultPromise;
 
 }
 
@@ -110,16 +117,24 @@ exports.createNewInverterEntry = createNewInverterEntry;
 
 function getEntriesInInterval(firstMoment, intervalLength){
 
-    const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > FROM_UNIXTIME(${firstMoment}) AND time < DATE_ADD(FROM_UNIXTIME(${firstMoment}), INTERVAL ${intervalLength} SECOND);`;
-    console.log(selectEntriesSQL);
+    const resultPromise = new Promise((resolve, reject) => {
 
-    con.query(selectEntriesSQL, function(err, result){
-        if(err){
-            throw err;
-        }
+        const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > FROM_UNIXTIME(${firstMoment}) AND time < DATE_ADD(FROM_UNIXTIME(${firstMoment}), INTERVAL ${intervalLength} SECOND);`;
+        console.log(selectEntriesSQL);
+    
+        con.query(selectEntriesSQL, function(err, result){
+            if(err){
+                reject(err);
+                throw err;
+            }
+    
+            resolve(result);
 
-        console.log(result);
+        });
+
     });
+
+    return resultPromise;
 
 }
 
@@ -127,16 +142,24 @@ exports.getEntriesInInterval = getEntriesInInterval;
 
 function getEntriesBetweenMoments(firstMoment, lastMoment){
 
-    const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > FROM_UNIXTIME(${firstMoment}) AND time < FROM_UNIXTIME(${lastMoment});`;
-    console.log(selectEntriesSQL);
+    const resultPromise = new Promise((resolve, reject) => {
 
-    con.query(selectEntriesSQL, function(err, result){
-        if(err){
-            throw err;
-        }
+        const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > FROM_UNIXTIME(${firstMoment}) AND time < FROM_UNIXTIME(${lastMoment});`;
+        console.log(selectEntriesSQL);
+    
+        con.query(selectEntriesSQL, function(err, result){
+            if(err){
+                reject(err);
+                throw err;
+            }
+    
+            resolve(result);
 
-        console.log(result);
+        });
+
     });
+
+    return resultPromise;
 
 }
 
@@ -145,16 +168,24 @@ exports.getEntriesBetweenMoments = getEntriesBetweenMoments;
 
 function getEntriesOfLastTime(intervalLength){
 
-    const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > DATE_SUB(NOW()), INTERVAL ${intervalLength} SECOND);`;
-    console.log(selectEntriesSQL);
+    const resultPromise = new Promise((resolve, reject) => {
 
-    con.query(selectEntriesSQL, function(err, result){
-        if(err){
-            throw err;
-        }
+        const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > DATE_SUB(NOW()), INTERVAL ${intervalLength} SECOND);`;
+        console.log(selectEntriesSQL);
+    
+        con.query(selectEntriesSQL, function(err, result){
+            if(err){
+                reject(err);
+                throw err;
+            }
+    
+            resolve(result);
 
-        console.log(result);
+        });
+
     });
+
+    return resultPromise;
 
 }
 
@@ -163,16 +194,24 @@ exports.getEntriesOfLastTime = getEntriesOfLastTime;
 
 function getEntriesSince(firstMoment){
 
-    const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > FROM_UNIXTIME(${firstMoment}) AND time < NOW();`;
-    console.log(selectEntriesSQL);
+    const resultPromise = new Promise((resolve, reason) => {
+        
+        const selectEntriesSQL = `SELECT * FROM ${inverterDataTableName} WHERE time > FROM_UNIXTIME(${firstMoment}) AND time < NOW();`;
+        console.log(selectEntriesSQL);
+    
+        con.query(selectEntriesSQL, function(err, result){
+            if(err){
+                reject(err);
+                throw err;
+            }
+    
+            resolve(result);
 
-    con.query(selectEntriesSQL, function(err, result){
-        if(err){
-            throw err;
-        }
+        });
 
-        console.log(result);
     });
+
+    return resultPromise;
 
 }
 

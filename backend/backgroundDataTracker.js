@@ -31,7 +31,9 @@ function startInverterDataTrackingInterval(){
 
         getInverterJson().then((value) => {
             
-            connect.createNewInverterEntry(value);
+            connect.createNewInverterEntry(value).then(() => {}, (reason) => {
+                console.error(reason);
+            } );
 
         });
 
