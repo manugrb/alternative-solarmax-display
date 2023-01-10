@@ -3,6 +3,7 @@ const cors = require("cors");
 const inverterInterface = require("./inverterInterface");
 const {prepareForTracking, startAllIntervals} = require("./backgroundDataTracker.js");
 const { getEntriesSince, getEntriesBetweenMoments, getEntriesInInterval } = require("./databaseInterface");
+const { getProducedEnergyToday } = require("./databaseDataAdapter");
 
 const app = express();
 const PORT = 3001;
@@ -83,6 +84,38 @@ app.get('/history', (req, res) => {
     }
 
     console.error("/history call's arguments are malformed." + beginning + " " + end + " " + intervalLength + " " + !!beginning + " " + !!end + " " + !!intervalLength);
+
+});
+
+app.get('/producedPower', (req, res) => {
+
+    const timeframe = req.query.timeframe;
+    
+    let getDataPromise;
+    switch(timeframe){
+
+        case "today":
+            getDataPromise = getProducedEnergyToday();
+            break;
+        
+        case "month":
+            break;
+        
+        case "year":
+            break;
+
+        default:
+            console.error("wrong timeframe parameter!");
+            res.status(400).send("Wrong timeframe parameter! ");
+            return;
+
+    }
+
+    getDataPromise.then((value) => {
+        res.status(200).send(value);
+    }, (reason) => {
+        res.status(500).send(reason);
+    })
 
 });
 
