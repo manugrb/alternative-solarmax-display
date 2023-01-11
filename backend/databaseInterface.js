@@ -169,11 +169,13 @@ function getEntriesBetweenMoments(firstMoment, lastMoment, selection = "*"){
 
     const resultPromise = new Promise((resolve, reject) => {
 
-        const date = new Date(firstMoment * 1000);
+        const firstDate = new Date(firstMoment * 1000);
+        const firstTimestamp = convertToTimestamp(firstDate);
 
-        const timestamp = convertToTimestamp(date);
+        const lastDate = new Date(lastMoment * 1000);
+        const lastTimestamp = convertToTimestamp(lastDate);
 
-        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time > ${timestamp} AND time < ${timestamp};`;
+        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time > ${firstTimestamp} AND time < ${lastTimestamp};`;
         console.log(selectEntriesSQL);
     
         con.query(selectEntriesSQL, function(err, result){
