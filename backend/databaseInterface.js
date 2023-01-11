@@ -2,7 +2,7 @@ const mysql = require("mysql");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const inverterDataTableName = "inverterData";
+let inverterDataTableName = "inverterData";
 
 const solarPowerColumnName = "solarPower";
 const housePowerColumnName = "housePower";
@@ -30,6 +30,12 @@ const con = mysql.createConnection({
     password: password
 });
 
+function setInverterDataTableName(tableName){
+    inverterDataTableName = tableName;
+    return inverterDataTableName;
+}
+exports.setInverterDataTableName = setInverterDataTableName;
+
 function connect(){
 
     const connectionPromise = new Promise((resolve, reject) => {
@@ -37,7 +43,7 @@ function connect(){
         con.connect(function(err) {
             if (err) throw err;
             console.log("Connected!");
-            setupDatabaseConnection().then(() => {
+            setupDatabaseConnection(inverterDataTableName).then(() => {
                 resolve(true);
             }, (reason) => {
                 reject(reason);
@@ -53,7 +59,7 @@ function connect(){
 
 exports.connect = connect;
 
-function setupDatabaseConnection(){
+function setupDatabaseConnection(inverterDataTableName){
 
     const setupPromise = new Promise((resolve, reject) => {
 
