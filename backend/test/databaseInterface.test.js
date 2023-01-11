@@ -53,12 +53,12 @@ describe('databaseInterface unit test', () => {
         beforeEach(() => {
 
             const dataObject = {
-                solarPower: 0,
-                housePower: 0,
-                gridPower: 0,
-                batteryPower: 0,
-                batteryCharge: 0,
-                batteryCapacity: 0
+                solarPower: 100,
+                housePower: 200,
+                gridPower: 300,
+                batteryPower: 400,
+                batteryCharge: 500,
+                batteryCapacity: 600
             }
     
             return createNewInverterEntry(dataObject).then((value) => {
@@ -72,8 +72,15 @@ describe('databaseInterface unit test', () => {
             const firstMoment = Math.round((responseTimestamp - 2500) / 1000); //get all entries of the last 3 sec after receiving the response
 
             return getEntriesInInterval(firstMoment, 3).then((value) => {
-                console.log(value);
-                //might interfere with the background task when running
+                delete value[1].time; //required to check against jsonObject also the time is already checked by checking how many entries are returned.
+                expect(value[1]).toEqual({
+                    solarPower: 100,
+                    housePower: 200,
+                    gridPower: 300,
+                    batteryPower: 400,
+                    batteryCharge: 500,
+                    batteryCapacity: 600,
+                });
                 expect(value.length).toBe(2); // we're checking to see 2 entries because we inserted 2 times 
             });
 
@@ -85,6 +92,15 @@ describe('databaseInterface unit test', () => {
             const lastMoment = Math.round(Date.now() / 1000);
 
             return getEntriesBetweenMoments(firstMoment, lastMoment).then((value) => {
+                delete value[1].time; //required to check against jsonObject also the time is already checked by checking how many entries are returned.
+                expect(value[1]).toEqual({
+                    solarPower: 100,
+                    housePower: 200,
+                    gridPower: 300,
+                    batteryPower: 400,
+                    batteryCharge: 500,
+                    batteryCapacity: 600,
+                });
                 expect(value.length).toBe(3);
              });
 
@@ -93,6 +109,15 @@ describe('databaseInterface unit test', () => {
         it('selects right entries of last x time', () => {
 
             return getEntriesOfLastTime(4).then((value) => {
+                delete value[1].time; //required to check against jsonObject also the time is already checked by checking how many entries are returned.
+                expect(value[1]).toEqual({
+                    solarPower: 100,
+                    housePower: 200,
+                    gridPower: 300,
+                    batteryPower: 400,
+                    batteryCharge: 500,
+                    batteryCapacity: 600,
+                });
                 expect(value.length).toBe(4);
             });
 
@@ -103,6 +128,15 @@ describe('databaseInterface unit test', () => {
             const firstMoment = Math.round((responseTimestamp - 2500) / 1000);
 
             return getEntriesSince(firstMoment).then((value) => {
+                delete value[1].time; //required to check against jsonObject also the time is already checked by checking how many entries are returned.
+                expect(value[1]).toEqual({
+                    solarPower: 100,
+                    housePower: 200,
+                    gridPower: 300,
+                    batteryPower: 400,
+                    batteryCharge: 500,
+                    batteryCapacity: 600,
+                });
                 expect(value.length).toBe(5);
             });
 
