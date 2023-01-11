@@ -144,7 +144,7 @@ function getEntriesInInterval(firstMoment, intervalLength, selection = "*"){
 
         const timestamp = convertToTimestamp(date);
 
-        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time > ${timestamp} AND time < DATE_ADD(${timestamp}, INTERVAL ${intervalLength} SECOND);`;
+        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time >= ${timestamp} AND time <= DATE_ADD(${timestamp}, INTERVAL ${intervalLength} SECOND);`;
         console.log(selectEntriesSQL);
     
         con.query(selectEntriesSQL, function(err, result){
@@ -175,7 +175,7 @@ function getEntriesBetweenMoments(firstMoment, lastMoment, selection = "*"){
         const lastDate = new Date(lastMoment * 1000);
         const lastTimestamp = convertToTimestamp(lastDate);
 
-        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time > ${firstTimestamp} AND time < ${lastTimestamp};`;
+        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time >= ${firstTimestamp} AND time <= ${lastTimestamp};`;
         console.log(selectEntriesSQL);
     
         con.query(selectEntriesSQL, function(err, result){
@@ -201,7 +201,7 @@ function getEntriesOfLastTime(intervalLength, selection = "*"){
 
     const resultPromise = new Promise((resolve, reject) => {
 
-        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time > DATE_SUB(NOW()), INTERVAL ${intervalLength} SECOND);`;
+        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time >= DATE_SUB(NOW(), INTERVAL ${intervalLength} SECOND);`;
         console.log(selectEntriesSQL);
     
         con.query(selectEntriesSQL, function(err, result){
@@ -225,13 +225,13 @@ exports.getEntriesOfLastTime = getEntriesOfLastTime;
 
 function getEntriesSince(firstMoment, selection = "*"){
 
-    const resultPromise = new Promise((resolve, reason) => {
+    const resultPromise = new Promise((resolve, reject) => {
 
         const date = new Date(firstMoment * 1000);
 
         const timestamp = convertToTimestamp(date);
         
-        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time > ${timestamp} AND time < NOW();`;
+        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time >= ${timestamp} AND time <= NOW();`;
         console.log(selectEntriesSQL);
     
         con.query(selectEntriesSQL, function(err, result){
