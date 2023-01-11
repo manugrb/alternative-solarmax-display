@@ -1,6 +1,9 @@
+//This is a unit test for databaseInterface
+
+
 const { connect, createNewInverterEntry, tearDownConnection, getEntriesInInterval, setInverterDataTableName, getEntriesBetweenMoments, getEntriesOfLastTime, getEntriesSince } = require("../databaseInterface");
 
-describe('databaseInterface', () => {
+describe('databaseInterface unit test', () => {
 
     it('sets the tableName', () => {
         expect(setInverterDataTableName("testInverterTable")).toBe("testInverterTable");

@@ -8,7 +8,7 @@ const inverterDataTrackingTimeInterval = process.env.INVERTER_DATA_TRACKING_INTE
 function prepareForTracking(){
     const preparePromise = new Promise((resolve, reject) => {
         connect.connect().then((value) => {
-            resolve();
+            resolve(value);
         }, (reason) => {
             reject();
         });
@@ -18,11 +18,11 @@ function prepareForTracking(){
 }
 
 function startAllIntervals(){
-    startInverterDataTrackingInterval();
+    return startInverterDataTrackingInterval();
 }
 
 function stopAllIntervals(){
-    stopInverterDataTrackingInterval();
+    return stopInverterDataTrackingInterval();
 }
 
 function startInverterDataTrackingInterval(){
@@ -38,6 +38,9 @@ function startInverterDataTrackingInterval(){
         });
 
     }, Number.parseInt(inverterDataTrackingTimeInterval));
+
+    return inverterDataTrackingInterval;
+    
 }
 
 function stopInverterDataTrackingInterval(){
@@ -48,5 +51,6 @@ function stopInverterDataTrackingInterval(){
 
 module.exports = {
     prepareForTracking,
-    startAllIntervals
+    startAllIntervals,
+    stopAllIntervals
 }
