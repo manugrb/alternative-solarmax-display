@@ -18,7 +18,6 @@ describe('backgroundDataTracker unit test', () => {
         const interval = startAllIntervals();
         inverterInterval = interval;
 
-        console.log(interval);
         expect(interval['_idleTimeout']).toBe(Number.parseInt(expectedTimeOut));
         expect(interval['_destroyed']).toBe(false);
 
