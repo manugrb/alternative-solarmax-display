@@ -38,7 +38,7 @@ function connect(){
             if (err) throw err;
             console.log("Connected!");
             setupDatabaseConnection().then(() => {
-                resolve();
+                resolve(true);
             }, (reason) => {
                 reject(reason);
             })
@@ -114,9 +114,9 @@ function createNewInverterEntry(inverterData){
         con.query(newEntrySQL, function(err, result){
             if(err){
                 reject(err);
-                throw err;
+                return;
             }
-    
+
             resolve(result);
     
         });
@@ -134,13 +134,17 @@ function getEntriesInInterval(firstMoment, intervalLength, selection = "*"){
 
     const resultPromise = new Promise((resolve, reject) => {
 
-        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time > FROM_UNIXTIME(${firstMoment}) AND time < DATE_ADD(FROM_UNIXTIME(${firstMoment}), INTERVAL ${intervalLength} SECOND);`;
+        const date = new Date(firstMoment * 1000);
+
+        const timestamp = convertToTimestamp(date);
+
+        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time > ${timestamp} AND time < DATE_ADD(${timestamp}, INTERVAL ${intervalLength} SECOND);`;
         console.log(selectEntriesSQL);
     
         con.query(selectEntriesSQL, function(err, result){
             if(err){
                 reject(err);
-                throw err;
+                return;
             }
     
             resolve(result);
@@ -159,13 +163,17 @@ function getEntriesBetweenMoments(firstMoment, lastMoment, selection = "*"){
 
     const resultPromise = new Promise((resolve, reject) => {
 
-        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time > FROM_UNIXTIME(${firstMoment}) AND time < FROM_UNIXTIME(${lastMoment});`;
+        const date = new Date(firstMoment * 1000);
+
+        const timestamp = convertToTimestamp(date);
+
+        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time > ${timestamp} AND time < ${timestamp};`;
         console.log(selectEntriesSQL);
     
         con.query(selectEntriesSQL, function(err, result){
             if(err){
                 reject(err);
-                throw err;
+                return;
             }
     
             resolve(result);
@@ -191,7 +199,7 @@ function getEntriesOfLastTime(intervalLength, selection = "*"){
         con.query(selectEntriesSQL, function(err, result){
             if(err){
                 reject(err);
-                throw err;
+                return
             }
     
             resolve(result);
@@ -210,14 +218,18 @@ exports.getEntriesOfLastTime = getEntriesOfLastTime;
 function getEntriesSince(firstMoment, selection = "*"){
 
     const resultPromise = new Promise((resolve, reason) => {
+
+        const date = new Date(firstMoment * 1000);
+
+        const timestamp = convertToTimestamp(date);
         
-        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time > FROM_UNIXTIME(${firstMoment}) AND time < NOW();`;
+        const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time > ${timestamp} AND time < NOW();`;
         console.log(selectEntriesSQL);
     
         con.query(selectEntriesSQL, function(err, result){
             if(err){
                 reject(err);
-                throw err;
+                return;
             }
     
             resolve(result);
@@ -231,3 +243,15 @@ function getEntriesSince(firstMoment, selection = "*"){
 }
 
 exports.getEntriesSince = getEntriesSince;
+
+function convertToTimestamp(date){
+    return ("'" + date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "'");
+}
+
+function tearDownConnection(){
+
+    con.end();
+
+}
+
+exports.tearDownConnection = tearDownConnection;
