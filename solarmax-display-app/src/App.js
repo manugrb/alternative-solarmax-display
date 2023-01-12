@@ -16,6 +16,8 @@ const App = () => {
 
     const [producedEnergyState, setProducedEnergyState] = useState(0);
     const [usedEnergyState, setUsedEnergyState] = useState(0);
+    const [boughtEnergyState, setBoughtEnergyState] = useState(0);
+    const [soldEnergyState, setSoldEnergyState] = useState(0);
 
     const [updateInterval, setUpdateInterval] = useState();
     const [energyUpdateInterval, setEnergyUpdateInterval] = useState();
@@ -97,6 +99,18 @@ const App = () => {
       setUsedEnergyState(value["usedEnergy"]);
     });
 
+    fetch('http://192.168.179.17:3001/boughtPower?timeframe=today').then((value) => {
+      return value.json();
+    }).then((value) => {
+      setBoughtEnergyState(value["boughtEnergy"]);
+    });
+
+    fetch('http://192.168.179.17:3001/soldPower?timeframe=today').then((value) => {
+      return value.json();
+    }).then((value) => {
+      setSoldEnergyState(value["soldEnergy"]);
+    });
+
   }
 
   return (
@@ -125,8 +139,10 @@ const App = () => {
           <h2>Results</h2>
 
           <div className="energyMeterContainer">
-            <EnergyMeter energy={producedEnergyState} name={"Todays' Solar Energy"} />
-            <EnergyMeter energy={usedEnergyState} name={"Todays' Used Energy"} />
+            <EnergyMeter energy={producedEnergyState} name={"Today's Solar Energy"} />
+            <EnergyMeter energy={usedEnergyState} name={"Today's Used Energy"} />
+            <EnergyMeter energy={boughtEnergyState} name={"Today's Bought Energy"} />
+            <EnergyMeter energy={soldEnergyState} name={"Today's Sold Energy"} />
           </div>
 
         </div>
