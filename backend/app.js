@@ -6,7 +6,7 @@ const { getEntriesSince, getEntriesBetweenMoments, getEntriesInInterval } = requ
 const { getProducedEnergyToday, getProducedEnergyThisMonth, getProducedEnergyThisYear, getUsedEnergyToday, getUsedEnergyThisMonth, getUsedEnergyThisYear } = require("./databaseDataAdapter");
 
 const app = express();
-const PORT = 3001;
+const PORT = Number.parseInt(process.env.API_PORT);
 
 app.use(
     cors({
