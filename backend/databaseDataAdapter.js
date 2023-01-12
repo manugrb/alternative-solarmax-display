@@ -36,6 +36,8 @@ exports.getUsedEnergyThisYear = getUsedEnergyThisYear;
 function getBoughtEnergyToday(){
     return getSomeEnergyToday(gridPowerColumnName, (entryValue) => {
         return (entryValue < 0);
+    }).then((value) => {
+        return Math.abs(value);
     });
 }
 exports.getBoughtEnergyToday = getBoughtEnergyToday;
@@ -43,6 +45,8 @@ exports.getBoughtEnergyToday = getBoughtEnergyToday;
 function getBoughtEnergyThisMonth(){
     return getSomeEnergyThisMonth(gridPowerColumnName, (entryValue) => {
         return (entryValue < 0);
+    }).then((value) => {
+        return Math.abs(value);
     });
 }
 exports.getBoughtEnergyThisMonth = getBoughtEnergyThisMonth;
@@ -50,6 +54,8 @@ exports.getBoughtEnergyThisMonth = getBoughtEnergyThisMonth;
 function getBoughtEnergyThisYear(){
     return getSomeEnergyThisYear(gridPowerColumnName, (entryValue) => {
         return (entryValue < 0);
+    }).then((value) => {
+        return Math.abs(value);
     });
 }
 exports.getBoughtEnergyThisYear = getBoughtEnergyThisYear;
