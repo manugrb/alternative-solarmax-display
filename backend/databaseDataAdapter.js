@@ -1,4 +1,4 @@
-const { getEntriesInInterval, solarPowerColumnName, housePowerColumnName } = require("./databaseInterface");
+const { solarPowerColumnName, housePowerColumnName, getEntriesBetweenMoments } = require("./databaseInterface");
 
 const inverterDataTrackingTimeInterval = Number.parseInt(process.env.INVERTER_DATA_TRACKING_INTERVAL);
 
@@ -28,7 +28,7 @@ function getUsedEnergyThisMonth(){
 exports.getUsedEnergyThisMonth = getUsedEnergyThisMonth;
 
 function getUsedEnergyThisYear(){
-    getSomeEnergyThisYear(housePowerColumnName);
+    return getSomeEnergyThisYear(housePowerColumnName);
 }
 exports.getUsedEnergyThisYear = getUsedEnergyThisYear;
 
@@ -103,7 +103,7 @@ function getEnergy(firstMoment, lastMoment, columnName){
 
     const resultPromise = new Promise((resolve, reject) => {
 
-        getEntriesInInterval(firstMoment, lastMoment, columnName).then((value) => {
+        getEntriesBetweenMoments(firstMoment, lastMoment, columnName).then((value) => {
 
             // resolve(value);
             let totalPower = 0;
