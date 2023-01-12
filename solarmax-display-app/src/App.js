@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import PowerMeter from './components/powerMeter/powerMeter';
 import BatteryMonitor from './components/batteryMonitor/batteryMonitor';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import EnergyMeter from './components/energyMeter/energyMeter';
 
 

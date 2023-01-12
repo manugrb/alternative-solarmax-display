@@ -99,7 +99,7 @@ function getSomeEnergySince(firstMoment, columnName){
 
 }
 
-function getEnergy(firstMoment, lastMoment, columnName){
+function getEnergy(firstMoment, lastMoment, columnName, checkerFunction = () => {return true}){
 
     const resultPromise = new Promise((resolve, reject) => {
 
@@ -107,10 +107,13 @@ function getEnergy(firstMoment, lastMoment, columnName){
 
             // resolve(value);
             let totalPower = 0;
-
+            
             for(entry of value){
                 
-                totalPower += entry[columnName] / (inverterDataTrackingTimeInterval / 1000);
+                const entryValue = entry[columnName];
+                if(checkerFunction(entryValue)){
+                    totalPower += entry[columnName] / (inverterDataTrackingTimeInterval / 1000);
+                }
                 
             }
 
