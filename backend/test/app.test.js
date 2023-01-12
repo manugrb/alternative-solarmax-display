@@ -2,7 +2,7 @@
 //an end-to-end-test of the whole backend if you want to call it that).
 
 const { default: fetch } = require("node-fetch");
-const { getProducedEnergyToday, getProducedEnergyThisMonth, getProducedEnergyThisYear, getUsedEnergyToday, getUsedEnergyThisMonth, getUsedEnergyThisYear } = require("../databaseDataAdapter");
+const { getProducedEnergyToday, getProducedEnergyThisMonth, getProducedEnergyThisYear, getUsedEnergyToday, getUsedEnergyThisMonth, getUsedEnergyThisYear, getBoughtEnergyThisMonth, getBoughtEnergyToday, getBoughtEnergyThisYear, getSoldEnergyToday, getSoldEnergyThisMonth, getSoldEnergyThisYear } = require("../databaseDataAdapter");
 const { setInverterDataTableName, getEntriesBetweenMoments, connect, getEntriesInInterval, getEntriesSince } = require("../databaseInterface");
 
 describe("app.js unit test", () => {
@@ -201,6 +201,120 @@ describe("app.js unit test", () => {
         })
 
         const expectedValuePromise = getUsedEnergyThisYear();
+
+        return Promise.all([responsePromise, expectedValuePromise]).then((values) => {
+            expect(values[0]).toBe(values[1]);
+        });
+
+    });
+
+    it("returns value for today's bought energy", () => {
+
+        const url = "http://localhost:" + PORT + "/boughtPower?timeframe=today";
+
+        const firstResponsePromise = fetch(url).then((value) => {
+            return value.json();
+        });
+        const responsePromise = firstResponsePromise.then((value) => {
+            return value.boughtEnergy;
+        })
+
+        const expectedValuePromise = getBoughtEnergyToday()
+
+        return Promise.all([responsePromise, expectedValuePromise]).then((values) => {
+            expect(values[0]).toBe(values[1]);
+        });
+
+    });
+
+    it("returns value for this month's bought energy", () => {
+
+        const url = "http://localhost:" + PORT + "/boughtPower?timeframe=month";
+
+        const firstResponsePromise = fetch(url).then((value) => {
+            return value.json();
+        });
+        const responsePromise = firstResponsePromise.then((value) => {
+            return value.boughtEnergy;
+        })
+
+        const expectedValuePromise = getBoughtEnergyThisMonth();
+
+        return Promise.all([responsePromise, expectedValuePromise]).then((values) => {
+            expect(values[0]).toBe(values[1]);
+        });
+
+    });
+
+    it("returns value for this year's bought energy", () => {
+
+        const url = "http://localhost:" + PORT + "/boughtPower?timeframe=year";
+
+        const firstResponsePromise = fetch(url).then((value) => {
+            return value.json();
+        });
+        const responsePromise = firstResponsePromise.then((value) => {
+            return value.boughtEnergy;
+        })
+
+        const expectedValuePromise = getBoughtEnergyThisYear();
+
+        return Promise.all([responsePromise, expectedValuePromise]).then((values) => {
+            expect(values[0]).toBe(values[1]);
+        });
+
+    });
+
+    it("returns value for today's sold energy", () => {
+
+        const url = "http://localhost:" + PORT + "/soldPower?timeframe=today";
+
+        const firstResponsePromise = fetch(url).then((value) => {
+            return value.json();
+        });
+        const responsePromise = firstResponsePromise.then((value) => {
+            return value.soldEnergy;
+        })
+
+        const expectedValuePromise = getSoldEnergyToday()
+
+        return Promise.all([responsePromise, expectedValuePromise]).then((values) => {
+            expect(values[0]).toBe(values[1]);
+        });
+
+    });
+
+    it("returns value for this month's sold energy", () => {
+
+        const url = "http://localhost:" + PORT + "/soldPower?timeframe=month";
+
+        const firstResponsePromise = fetch(url).then((value) => {
+            return value.json();
+        });
+        const responsePromise = firstResponsePromise.then((value) => {
+            return value.soldEnergy;
+        })
+
+        const expectedValuePromise = getSoldEnergyThisMonth();
+
+        return Promise.all([responsePromise, expectedValuePromise]).then((values) => {
+            expect(values[0]).toBe(values[1]);
+        });
+
+    });
+
+    it("returns value for this year's sold energy", () => {
+
+        const url = "http://localhost:" + PORT + "/soldPower?timeframe=year";
+
+        const firstResponsePromise = fetch(url).then((value) => {
+            return value.json();
+        });
+        const responsePromise = firstResponsePromise.then((value) => {
+            return value.soldEnergy;
+        })
+
+        const expectedValuePromise = getSoldEnergyThisYear();
 
         return Promise.all([responsePromise, expectedValuePromise]).then((values) => {
             expect(values[0]).toBe(values[1]);

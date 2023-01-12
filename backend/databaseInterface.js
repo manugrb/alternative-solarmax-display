@@ -42,7 +42,7 @@ function connect(){
 
         con.connect(function(err) {
             if (err) throw err;
-            console.log("Connected!");
+            //console.log("Connected!");
             setupDatabaseConnection(inverterDataTableName).then(() => {
                 resolve(true);
             }, (reason) => {
@@ -145,7 +145,7 @@ function getEntriesInInterval(firstMoment, intervalLength, selection = "*"){
         const timestamp = convertToTimestamp(date);
 
         const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time >= ${timestamp} AND time <= DATE_ADD(${timestamp}, INTERVAL ${intervalLength} SECOND);`;
-        console.log(selectEntriesSQL);
+        //console.log(selectEntriesSQL);
     
         con.query(selectEntriesSQL, function(err, result){
             if(err){
@@ -176,7 +176,7 @@ function getEntriesBetweenMoments(firstMoment, lastMoment, selection = "*"){
         const lastTimestamp = convertToTimestamp(lastDate);
 
         const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time >= ${firstTimestamp} AND time <= ${lastTimestamp};`;
-        console.log(selectEntriesSQL);
+        //console.log(selectEntriesSQL);
     
         con.query(selectEntriesSQL, function(err, result){
             if(err){
@@ -202,7 +202,7 @@ function getEntriesOfLastTime(intervalLength, selection = "*"){
     const resultPromise = new Promise((resolve, reject) => {
 
         const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time >= DATE_SUB(NOW(), INTERVAL ${intervalLength} SECOND);`;
-        console.log(selectEntriesSQL);
+        //console.log(selectEntriesSQL);
     
         con.query(selectEntriesSQL, function(err, result){
             if(err){
@@ -232,7 +232,7 @@ function getEntriesSince(firstMoment, selection = "*"){
         const timestamp = convertToTimestamp(date);
         
         const selectEntriesSQL = `SELECT ${selection} FROM ${inverterDataTableName} WHERE time >= ${timestamp} AND time <= NOW();`;
-        console.log(selectEntriesSQL);
+        //console.log(selectEntriesSQL);
     
         con.query(selectEntriesSQL, function(err, result){
             if(err){

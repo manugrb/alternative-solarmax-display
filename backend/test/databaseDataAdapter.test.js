@@ -160,15 +160,12 @@ describe('databaseDataAdapter unit test', () => {
         const entriesPromise = getEntriesSince(timestamp, gridPowerColumnName);
 
         entriesResponse = entriesPromise.then((value) => {
-            const total = computeTotalEnergyPos(value, gridPowerColumnName);
-            console.log(total);
-            return total;
+            return computeTotalEnergyPos(value, gridPowerColumnName);
         });
 
         todaysEnergyPromise = getSoldEnergyToday();
 
         return Promise.all([entriesResponse, todaysEnergyPromise]).then((values) => {
-            console.log(values[0] + " " + values[1]);
             const absDifference = Math.abs(values[0] - values[1]);
             expect(absDifference).toBeLessThanOrEqual(5);
 
@@ -229,15 +226,12 @@ describe('databaseDataAdapter unit test', () => {
         const entriesPromise = getEntriesSince(timestamp, gridPowerColumnName);
 
         entriesResponse = entriesPromise.then((value) => {
-            const total = computeTotalEnergyNeg(value, gridPowerColumnName);
-            console.log(total);
-            return total;
+            return computeTotalEnergyNeg(value, gridPowerColumnName);
         });
 
         todaysEnergyPromise = getBoughtEnergyToday();
 
         return Promise.all([entriesResponse, todaysEnergyPromise]).then((values) => {
-            console.log(values[0] + " " + values[1]);
             const absDifference = Math.abs(values[0] - values[1]);
             expect(absDifference).toBeLessThanOrEqual(5);
 
