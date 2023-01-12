@@ -1,3 +1,5 @@
 backend/datafetcher.js
 backend/.env
-
+node_modules
+solarmax-display-app/node_modules
+backend/node_modules
