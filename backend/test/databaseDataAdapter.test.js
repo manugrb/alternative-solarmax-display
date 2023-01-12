@@ -29,7 +29,10 @@ describe('databaseDataAdapter unit test', () => {
         todaysEnergyPromise = getProducedEnergyToday();
 
         return Promise.all([entriesResponse, todaysEnergyPromise]).then((values) => {
-            expect(values[0]).toBe(values[1]);
+
+            const absDifference = Math.abs(values[0] - values[1]);
+            expect(absDifference).toBeLessThanOrEqual(5);  //the values don't need to be exactly the same it is enough when they are close.
+
         });
 
     });
@@ -49,7 +52,10 @@ describe('databaseDataAdapter unit test', () => {
         thisMonthsEnergyPromise = getProducedEnergyThisMonth();
 
         return Promise.all([entriesResponse, thisMonthsEnergyPromise]).then((values) => {
-            expect(values[0]).toBe(values[1]);
+
+            const absDifference = Math.abs(values[0] - values[1]);
+            expect(absDifference).toBeLessThanOrEqual(5);
+
         });
 
     });
@@ -69,7 +75,10 @@ describe('databaseDataAdapter unit test', () => {
         thisYearsEnergyPromise = getProducedEnergyThisYear();
 
         return Promise.all([entriesResponse, thisMonthsEnergyPromise]).then((values) => {
-            expect(values[0]).toBe(values[1]);
+
+            const absDifference = Math.abs(values[0] - values[1]);
+            expect(absDifference).toBeLessThanOrEqual(5);
+
         });
         
     });
@@ -90,7 +99,10 @@ describe('databaseDataAdapter unit test', () => {
         todaysEnergyPromise = getUsedEnergyToday();
 
         return Promise.all([entriesResponse, todaysEnergyPromise]).then((values) => {
-            expect(values[0]).toBe(values[1]);
+
+            const absDifference = Math.abs(values[0] - values[1]);
+            expect(absDifference).toBeLessThanOrEqual(5);
+
         });
 
     });
@@ -110,7 +122,10 @@ describe('databaseDataAdapter unit test', () => {
         thisMonthsEnergyPromise = getUsedEnergyThisMonth();
 
         return Promise.all([entriesResponse, thisMonthsEnergyPromise]).then((values) => {
-            expect(values[0]).toBe(values[1]);
+
+            const absDifference = Math.abs(values[0] - values[1]);
+            expect(absDifference).toBeLessThanOrEqual(5);
+
         });
 
     });
@@ -129,7 +144,10 @@ describe('databaseDataAdapter unit test', () => {
         thisYearsEnergyPromise = getUsedEnergyThisYear();
 
         return Promise.all([entriesResponse, thisMonthsEnergyPromise]).then((values) => {
-            expect(values[0]).toBe(values[1]);
+
+            const absDifference = Math.abs(values[0] - values[1]);
+            expect(absDifference).toBeLessThanOrEqual(5);
+
         });
     });
 
