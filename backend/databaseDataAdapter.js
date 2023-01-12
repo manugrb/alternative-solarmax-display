@@ -28,7 +28,7 @@ function getUsedEnergyThisMonth(){
 exports.getUsedEnergyThisMonth = getUsedEnergyThisMonth;
 
 function getUsedEnergyThisYear(){
-    getSomeEnergyThisYear(housePowerColumnName);
+    return getSomeEnergyThisYear(housePowerColumnName);
 }
 exports.getUsedEnergyThisYear = getUsedEnergyThisYear;
 

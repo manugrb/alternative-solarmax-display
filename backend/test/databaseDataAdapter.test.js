@@ -143,7 +143,7 @@ describe('databaseDataAdapter unit test', () => {
 
         thisYearsEnergyPromise = getUsedEnergyThisYear();
 
-        return Promise.all([entriesResponse, thisMonthsEnergyPromise]).then((values) => {
+        return Promise.all([entriesResponse, thisYearsEnergyPromise]).then((values) => {
 
             const absDifference = Math.abs(values[0] - values[1]);
             expect(absDifference).toBeLessThanOrEqual(5);
