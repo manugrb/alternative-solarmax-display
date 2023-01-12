@@ -1,8 +1,8 @@
 //this is a unit test for databaseDataAdapter and at the same time an integration test for databaseDataAdapter and databaseInterface.
 //To really be able to use this test the test table in your database should be filled with some test data, that is distributed over different months and years.
 
-const { getProducedEnergyToday, getProducedEnergyThisMonth, getProducedEnergyThisYear, getUsedEnergyToday, getUsedEnergyThisMonth, getUsedEnergyThisYear } = require("../databaseDataAdapter");
-const { setInverterDataTableName, connect, getEntriesSince, solarPowerColumnName, housePowerColumnName } = require("../databaseInterface");
+const { getProducedEnergyToday, getProducedEnergyThisMonth, getProducedEnergyThisYear, getUsedEnergyToday, getUsedEnergyThisMonth, getUsedEnergyThisYear, getSoldEnergyToday, getSoldEnergyThisMonth, getSoldEnergyThisYear, getBoughtEnergyThisYear, getBoughtEnergyThisMonth, getBoughtEnergyToday } = require("../databaseDataAdapter");
+const { setInverterDataTableName, connect, getEntriesSince, solarPowerColumnName, housePowerColumnName, gridPowerColumnName } = require("../databaseInterface");
 
 describe('databaseDataAdapter unit test', () => {
 
@@ -151,6 +151,143 @@ describe('databaseDataAdapter unit test', () => {
         });
     });
 
+    it("gets the correct value for today's sold energy", () => {
+
+        const now = new Date();
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const timestamp = startOfDay / 1000;
+     
+        const entriesPromise = getEntriesSince(timestamp, gridPowerColumnName);
+
+        entriesResponse = entriesPromise.then((value) => {
+            const total = computeTotalEnergyPos(value, gridPowerColumnName);
+            console.log(total);
+            return total;
+        });
+
+        todaysEnergyPromise = getSoldEnergyToday();
+
+        return Promise.all([entriesResponse, todaysEnergyPromise]).then((values) => {
+            console.log(values[0] + " " + values[1]);
+            const absDifference = Math.abs(values[0] - values[1]);
+            expect(absDifference).toBeLessThanOrEqual(5);
+
+        });
+
+    });
+
+    it("gets the correct value for this month's sold energy", () => {
+
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const timestamp = startOfMonth / 1000;
+     
+        const entriesPromise = getEntriesSince(timestamp, gridPowerColumnName);
+
+        entriesResponse = entriesPromise.then((value) => {
+            return computeTotalEnergyPos(value, gridPowerColumnName);
+        });
+
+        thisMonthsEnergyPromise = getSoldEnergyThisMonth();
+
+        return Promise.all([entriesResponse, thisMonthsEnergyPromise]).then((values) => {
+
+            const absDifference = Math.abs(values[0] - values[1]);
+            expect(absDifference).toBeLessThanOrEqual(5);
+
+        });
+
+    });
+
+    it("gets the correct value for this year's sold energy", () => {
+        const now = new Date();
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        const timestamp = startOfYear / 1000;
+     
+        const entriesPromise = getEntriesSince(timestamp, gridPowerColumnName);
+
+        entriesResponse = entriesPromise.then((value) => {
+            return computeTotalEnergyPos(value, gridPowerColumnName);
+        });
+
+        thisYearsEnergyPromise = getSoldEnergyThisYear();
+
+        return Promise.all([entriesResponse, thisYearsEnergyPromise]).then((values) => {
+
+            const absDifference = Math.abs(values[0] - values[1]);
+            expect(absDifference).toBeLessThanOrEqual(5);
+
+        });
+    });
+
+    it("gets the correct value for today's bought energy", () => {
+
+        const now = new Date();
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const timestamp = startOfDay / 1000;
+     
+        const entriesPromise = getEntriesSince(timestamp, gridPowerColumnName);
+
+        entriesResponse = entriesPromise.then((value) => {
+            const total = computeTotalEnergyNeg(value, gridPowerColumnName);
+            console.log(total);
+            return total;
+        });
+
+        todaysEnergyPromise = getBoughtEnergyToday();
+
+        return Promise.all([entriesResponse, todaysEnergyPromise]).then((values) => {
+            console.log(values[0] + " " + values[1]);
+            const absDifference = Math.abs(values[0] - values[1]);
+            expect(absDifference).toBeLessThanOrEqual(5);
+
+        });
+
+    });
+
+    it("gets the correct value for this month's bouhgt energy", () => {
+
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const timestamp = startOfMonth / 1000;
+     
+        const entriesPromise = getEntriesSince(timestamp, gridPowerColumnName);
+
+        entriesResponse = entriesPromise.then((value) => {
+            return computeTotalEnergyNeg(value, gridPowerColumnName);
+        });
+
+        thisMonthsEnergyPromise = getBoughtEnergyThisMonth();
+
+        return Promise.all([entriesResponse, thisMonthsEnergyPromise]).then((values) => {
+
+            const absDifference = Math.abs(values[0] - values[1]);
+            expect(absDifference).toBeLessThanOrEqual(5);
+
+        });
+
+    });
+
+    it("gets the correct value for this year's bought energy", () => {
+        const now = new Date();
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        const timestamp = startOfYear / 1000;
+     
+        const entriesPromise = getEntriesSince(timestamp, gridPowerColumnName);
+
+        entriesResponse = entriesPromise.then((value) => {
+            return computeTotalEnergyNeg(value, gridPowerColumnName);
+        });
+
+        thisYearsEnergyPromise = getBoughtEnergyThisYear();
+
+        return Promise.all([entriesResponse, thisYearsEnergyPromise]).then((values) => {
+
+            const absDifference = Math.abs(values[0] - values[1]);
+            expect(absDifference).toBeLessThanOrEqual(5);
+
+        });
+    });
 
     function computeTotalEnergy(objectArray, key){
 
@@ -163,6 +300,38 @@ describe('databaseDataAdapter unit test', () => {
         }
 
         return Math.round(total);
+
+    }
+
+    function computeTotalEnergyPos(objectArray, key){
+
+        let total = 0;
+        const intervalLength = Math.round(Number.parseInt(process.env.INVERTER_DATA_TRACKING_INTERVAL) / 1000);
+        const checksPerHour = 3600 / intervalLength;
+
+        for(object of objectArray){
+            const objectValue = object[key];
+            if(objectValue < 0) continue;
+            total += objectValue / checksPerHour;
+        }
+
+        return Math.round(total);
+
+    }
+
+    function computeTotalEnergyNeg(objectArray, key){
+
+        let total = 0;
+        const intervalLength = Math.round(Number.parseInt(process.env.INVERTER_DATA_TRACKING_INTERVAL) / 1000);
+        const checksPerHour = 3600 / intervalLength;
+
+        for(object of objectArray){
+            const objectValue = object[key];
+            if(objectValue > 0) continue;
+            total += objectValue / checksPerHour;
+        }
+
+        return Math.abs(Math.round(total));
 
     }
 

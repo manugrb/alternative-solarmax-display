@@ -1,4 +1,4 @@
-const { solarPowerColumnName, housePowerColumnName, getEntriesBetweenMoments } = require("./databaseInterface");
+const { solarPowerColumnName, housePowerColumnName, getEntriesBetweenMoments, gridPowerColumnName } = require("./databaseInterface");
 
 const inverterDataTrackingTimeInterval = Number.parseInt(process.env.INVERTER_DATA_TRACKING_INTERVAL);
 
@@ -32,7 +32,51 @@ function getUsedEnergyThisYear(){
 }
 exports.getUsedEnergyThisYear = getUsedEnergyThisYear;
 
-function getSomeEnergyToday(columnName){
+
+function getBoughtEnergyToday(){
+    return getSomeEnergyToday(gridPowerColumnName, (entryValue) => {
+        return (entryValue < 0);
+    });
+}
+exports.getBoughtEnergyToday = getBoughtEnergyToday;
+
+function getBoughtEnergyThisMonth(){
+    return getSomeEnergyThisMonth(gridPowerColumnName, (entryValue) => {
+        return (entryValue < 0);
+    });
+}
+exports.getBoughtEnergyThisMonth = getBoughtEnergyThisMonth;
+
+function getBoughtEnergyThisYear(){
+    return getSomeEnergyThisYear(gridPowerColumnName, (entryValue) => {
+        return (entryValue < 0);
+    });
+}
+exports.getBoughtEnergyThisYear = getBoughtEnergyThisYear;
+
+
+function getSoldEnergyToday(){
+    return getSomeEnergyToday(gridPowerColumnName, (entryValue) => {
+        return (entryValue > 0);
+    });
+}
+exports.getSoldEnergyToday = getSoldEnergyToday;
+
+function getSoldEnergyThisMonth(){
+    return getSomeEnergyThisMonth(gridPowerColumnName, (entryValue) => {
+        return (entryValue > 0);
+    });
+}
+exports.getSoldEnergyThisMonth = getSoldEnergyThisMonth;
+
+function getSoldEnergyThisYear(){
+    return getSomeEnergyThisYear(gridPowerColumnName, (entryValue) => {
+        return (entryValue > 0);
+    });
+}
+exports.getSoldEnergyThisYear = getSoldEnergyThisYear;
+
+function getSomeEnergyToday(columnName, checkerFunction = (arg) => {return true}){
 
     const resultPromise = new Promise((resolve, reject) => {
 
@@ -40,7 +84,7 @@ function getSomeEnergyToday(columnName){
         const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const firstMomentTimestamp = Math.round(startOfDay / 1000);
     
-        getSomeEnergySince(firstMomentTimestamp, columnName).then((value) => {
+        getSomeEnergySince(firstMomentTimestamp, columnName, checkerFunction).then((value) => {
             resolve(value);
         }, (reason) => {
             reject(reason);
@@ -52,7 +96,7 @@ function getSomeEnergyToday(columnName){
 
 }
 
-function getSomeEnergyThisMonth(columnName){
+function getSomeEnergyThisMonth(columnName,  checkerFunction = (arg) => {return true}){
 
     const resultPromise = new Promise((resolve, reject) => {
 
@@ -60,7 +104,7 @@ function getSomeEnergyThisMonth(columnName){
         const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
         const firstMomentTimestamp = Math.round(startOfMonth / 1000);
     
-        getSomeEnergySince(firstMomentTimestamp, columnName).then((value) => {
+        getSomeEnergySince(firstMomentTimestamp, columnName, checkerFunction).then((value) => {
             resolve(value);
         }, (reason) => {
             reject(reason);
@@ -72,7 +116,7 @@ function getSomeEnergyThisMonth(columnName){
 
 }
 
-function getSomeEnergyThisYear(columnName){
+function getSomeEnergyThisYear(columnName,  checkerFunction = (arg) => {return true}){
 
     const resultPromise = new Promise((resolve, reject) => {
 
@@ -80,7 +124,7 @@ function getSomeEnergyThisYear(columnName){
         const startOfYear = new Date(now.getFullYear(), 0, 1);
         const firstMomentTimestamp = Math.round(startOfYear / 1000);
     
-        getSomeEnergySince(firstMomentTimestamp, columnName).then((value) => {
+        getSomeEnergySince(firstMomentTimestamp, columnName, checkerFunction).then((value) => {
             resolve(value);
         }, (reason) => {
             reject(reason);
@@ -92,14 +136,14 @@ function getSomeEnergyThisYear(columnName){
 
 }
 
-function getSomeEnergySince(firstMoment, columnName){
+function getSomeEnergySince(firstMoment, columnName,  checkerFunction){
 
     const nowTimestamp = Math.round(Date.now() / 1000);
-    return getEnergy(firstMoment, nowTimestamp, columnName);
+    return getEnergy(firstMoment, nowTimestamp, columnName, checkerFunction);
 
 }
 
-function getEnergy(firstMoment, lastMoment, columnName, checkerFunction = () => {return true}){
+function getEnergy(firstMoment, lastMoment, columnName, checkerFunction){
 
     const resultPromise = new Promise((resolve, reject) => {
 
