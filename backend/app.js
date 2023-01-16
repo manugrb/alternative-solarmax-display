@@ -4,6 +4,7 @@ const inverterInterface = require("./inverterInterface");
 const {prepareForTracking, startAllIntervals} = require("./backgroundDataTracker.js");
 const { getEntriesSince, getEntriesBetweenMoments, getEntriesInInterval } = require("./databaseInterface");
 const { getProducedEnergyToday, getProducedEnergyThisMonth, getProducedEnergyThisYear, getUsedEnergyToday, getUsedEnergyThisMonth, getUsedEnergyThisYear, getBoughtEnergyToday, getBoughtEnergyThisMonth, getBoughtEnergyThisYear, getSoldEnergyToday, getSoldEnergyThisMonth, getSoldEnergyThisYear } = require("./databaseDataAdapter");
+const { calculateCO2Equivalent, calculateBalance } = require("./impactInterface");
 
 const app = express();
 const PORT = Number.parseInt(process.env.API_PORT);
@@ -194,7 +195,7 @@ app.get('/boughtPower', (req, res) => {
         res.status(200).send(responseObject);
     }, (reason) => {
         res.status(500).send(reason);
-    })
+    });
 
 });
 
@@ -231,7 +232,100 @@ app.get('/soldPower', (req, res) => {
         res.status(200).send(responseObject);
     }, (reason) => {
         res.status(500).send(reason);
-    })
+    });
+
+});
+
+app.get('/savedCO2', (req, res) => {
+
+    const timeframe = req.query.timeframe;
+
+    let getDataPromise;
+
+    switch(timeframe){
+
+        case "today":
+            getDataPromise = getProducedEnergyToday();
+            break;
+        case "month":
+            getDataPromise = getProducedEnergyThisMonth();
+            break;
+        
+        case "year":
+            getDataPromise = getProducedEnergyThisYear();
+            break;
+
+        default:
+            console.error("wrong timeframe parameter!");
+            res.status(400).send("Wrong timeframe parameter! ");
+            return;
+
+    }
+
+    getDataPromise.then((value) => {
+
+        const producedEnergy = value;
+        co2Equivalent = calculateCO2Equivalent(producedEnergy);
+
+        const responseObject = {
+            savedCO2: co2Equivalent
+        }
+        res.status(200).send(responseObject);
+    }, (reason) => {
+        res.status(500).send(reason);
+    });
+
+});
+
+app.get('/balance', (req, res) => {
+
+    const timeframe = req.query.timeframe;
+
+    let getBoughtDataPromise;
+    let getSoldDataPromise;
+    let getProducedDataPromise;
+
+    switch(timeframe){
+
+        case "today":
+            getBoughtDataPromise = getBoughtEnergyToday();
+            getSoldDataPromise = getSoldEnergyToday();
+            getProducedDataPromise = getProducedEnergyToday();
+            break;
+        case "month":
+            getBoughtDataPromise = getBoughtEnergyThisMonth();
+            getSoldDataPromise = getSoldEnergyThisMonth();
+            getProducedDataPromise = getProducedEnergyThisMonth();
+            break;
+        
+        case "year":
+            getBoughtDataPromise = getBoughtEnergyThisYear();
+            getSoldDataPromise = getSoldEnergyThisYear();
+            getProducedDataPromise = getProducedEnergyThisYear();
+            break;
+
+        default:
+            console.error("wrong timeframe parameter!");
+            res.status(400).send("Wrong timeframe parameter! ");
+            return;
+
+    }
+
+    Promise.all([getBoughtDataPromise, getSoldDataPromise, getProducedDataPromise]).then((values) => {
+
+        const boughtEnergy = values[0];
+        const soldEnergy = values[1];
+        const producedEnergy = values[2];
+
+        const balance = calculateBalance(boughtEnergy, soldEnergy, producedEnergy);
+
+        const responseObject = {
+            balance: balance
+        }
+        res.status(200).send(responseObject);
+    }, (reason) => {
+        res.status(500).send(reason);
+    });
 
 });
 
