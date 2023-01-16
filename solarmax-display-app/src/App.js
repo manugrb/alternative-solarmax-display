@@ -20,6 +20,8 @@ const App = () => {
     const [boughtEnergyState, setBoughtEnergyState] = useState(0);
     const [soldEnergyState, setSoldEnergyState] = useState(0);
 
+    const [timeframeState, setTimeframeState] = useState("today");
+
     const [updateInterval, setUpdateInterval] = useState();
     const [energyUpdateInterval, setEnergyUpdateInterval] = useState();
     let continouslyFetchingData = false;
@@ -84,9 +86,13 @@ const App = () => {
 
   }, []);
 
+  useEffect(() => {
+    updateEnergyValues();
+  }, [timeframeState]);
+
   function updateEnergyValues(){
 
-    fetch('http://192.168.179.17:3001/producedPower?timeframe=today').then((value) => {
+    fetch('http://192.168.179.17:3001/producedPower?timeframe=' + timeframeState).then((value) => {
       console.log(value);
       return value.json();
     }).then((value) => {
@@ -94,19 +100,19 @@ const App = () => {
     });
 
 
-    fetch('http://192.168.179.17:3001/usedPower?timeframe=today').then((value) => {
+    fetch('http://192.168.179.17:3001/usedPower?timeframe=' + timeframeState).then((value) => {
       return value.json();
     }).then((value) => {
       setUsedEnergyState(value["usedEnergy"]);
     });
 
-    fetch('http://192.168.179.17:3001/boughtPower?timeframe=today').then((value) => {
+    fetch('http://192.168.179.17:3001/boughtPower?timeframe=' + timeframeState).then((value) => {
       return value.json();
     }).then((value) => {
       setBoughtEnergyState(value["boughtEnergy"]);
     });
 
-    fetch('http://192.168.179.17:3001/soldPower?timeframe=today').then((value) => {
+    fetch('http://192.168.179.17:3001/soldPower?timeframe=' + timeframeState).then((value) => {
       return value.json();
     }).then((value) => {
       setSoldEnergyState(value["soldEnergy"]);
@@ -137,10 +143,10 @@ const App = () => {
         </div>
 
         <div className="results">
-          <h2>Results</h2>
+          <h2>Results</h2> 
 
           <div className="energyMeterContainer">
-            <TimeFrameSelector timeframes={["today", "this month"]}/>
+            <TimeFrameSelector timeframes={[{"today": setTimeframeState}, {"month": setTimeframeState}, {"year": setTimeframeState}]}/>
             <EnergyMeter energy={producedEnergyState} name={"Today's Solar Energy"} />
             <EnergyMeter energy={usedEnergyState} name={"Today's Used Energy"} />
             <EnergyMeter energy={boughtEnergyState} name={"Today's Bought Energy"} />

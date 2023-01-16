@@ -8,7 +8,12 @@ const TimeFrameSelector = (props) => {
 
         return props.timeframes.map((timeframe) => {
 
-            return <button>{timeframe}</button> 
+            const timeframeName = Object.keys(timeframe)[0];
+            const onclick = () => {
+                const propsFunction = timeframe[timeframeName];
+                propsFunction(timeframeName);
+            }
+            return <button onClick={onclick}>{timeframeName}</button>
     
         });
 
