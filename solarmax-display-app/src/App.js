@@ -4,6 +4,7 @@ import PowerMeter from './components/powerMeter/powerMeter';
 import BatteryMonitor from './components/batteryMonitor/batteryMonitor';
 import React, { useEffect, useState } from 'react';
 import EnergyMeter from './components/energyMeter/energyMeter';
+import TimeFrameSelector from './components/timeFrameSelector/timeFrameSelector';
 
 
 const App = () => {
@@ -139,6 +140,7 @@ const App = () => {
           <h2>Results</h2>
 
           <div className="energyMeterContainer">
+            <TimeFrameSelector timeframes={["today", "this month"]}/>
             <EnergyMeter energy={producedEnergyState} name={"Today's Solar Energy"} />
             <EnergyMeter energy={usedEnergyState} name={"Today's Used Energy"} />
             <EnergyMeter energy={boughtEnergyState} name={"Today's Bought Energy"} />
