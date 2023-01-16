@@ -15,11 +15,23 @@ function calculateEarnedMoney(energy){
 exports.calculateEarnedMoney = calculateEarnedMoney;
 
 function calculateSavedMoney(energy){
-    return calculateSpendMoney(energy); //the price for the saved energy is the same as the price for the bought energy
+    return calculateSpentMoney(energy); //the price for the saved energy is the same as the price for the bought energy
 }
 exports.calculateSavedMoney = calculateSavedMoney;
 
-function calculateSpendMoney(energy){
+function calculateSpentMoney(energy){
     return electricityPrice * (energy / 1000);
 }
-exports.calculateSpendMoney = calculateSpendMoney;
+exports.calculateSpentMoney = calculateSpentMoney;
+
+function calculateBalance(boughtEnergy, soldEnergy, producedEnergy){
+
+    const spentMoney = calculateSpentMoney(boughtEnergy);
+    const earnedMoney = calculateEarnedMoney(soldEnergy);
+    const savedGridEnergy = producedEnergy - soldEnergy;
+    const savedMoney = calculateSavedMoney(savedGridEnergy);
+
+    return (savedMoney + earnedMoney) - spentMoney;
+
+}
+exports.calculateBalance = calculateBalance;
