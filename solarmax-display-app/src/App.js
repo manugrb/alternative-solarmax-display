@@ -146,7 +146,19 @@ const App = () => {
           <h2>Results</h2> 
 
           <div className="energyMeterContainer">
-            <TimeFrameSelector timeframes={[{"today": setTimeframeState}, {"month": setTimeframeState}, {"year": setTimeframeState}]}/>
+            <TimeFrameSelector timeframes={[{
+              "timeframe": "today",
+              "onClickFunction": setTimeframeState,
+              "argument": "today"
+            }, {
+              "timeframe": "This Month",
+              "onClickFunction": setTimeframeState,
+              "argument": "month"
+            }, {
+              "timeframe": "This Year",
+              "onClickFunction": setTimeframeState,
+              "argument": "year"
+            }]}/>
             <EnergyMeter energy={producedEnergyState} name={"Today's Solar Energy"} />
             <EnergyMeter energy={usedEnergyState} name={"Today's Used Energy"} />
             <EnergyMeter energy={boughtEnergyState} name={"Today's Bought Energy"} />
