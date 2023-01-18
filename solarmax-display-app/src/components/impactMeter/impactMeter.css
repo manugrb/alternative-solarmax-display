@@ -1,0 +1,18 @@
+.impactMeterContainer{
+    width: fit-content;
+    display: inline-block;
+}
+
+.impactMeterContainer label{
+    color: var(--font-color-mid-priority);
+    font-size: var(--descriptions-font-size);
+}
+
+.ImpactMeter {
+    font-size: var(--main-content-element-font-size);
+    line-height: var(--main-content-element-font-size);
+    margin: 8px 0px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: var(--font-color-important);
+}
