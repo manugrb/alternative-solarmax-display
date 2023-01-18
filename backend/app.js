@@ -4,7 +4,7 @@ const inverterInterface = require("./inverterInterface");
 const {prepareForTracking, startAllIntervals} = require("./backgroundDataTracker.js");
 const { getEntriesSince, getEntriesBetweenMoments, getEntriesInInterval } = require("./databaseInterface");
 const { getProducedEnergyToday, getProducedEnergyThisMonth, getProducedEnergyThisYear, getUsedEnergyToday, getUsedEnergyThisMonth, getUsedEnergyThisYear, getBoughtEnergyToday, getBoughtEnergyThisMonth, getBoughtEnergyThisYear, getSoldEnergyToday, getSoldEnergyThisMonth, getSoldEnergyThisYear } = require("./databaseDataAdapter");
-const { calculateCO2Equivalent, calculateBalance } = require("./impactInterface");
+const { calculateCO2Equivalent, calculateBalance, calculateSystemRevenue } = require("./impactInterface");
 
 const app = express();
 const PORT = Number.parseInt(process.env.API_PORT);
@@ -277,6 +277,47 @@ app.get('/savedCO2', (req, res) => {
 
 });
 
+app.get('/emittedCO2', (req, res) => {
+
+    const timeframe = req.query.timeframe;
+
+    let getDataPromise;
+
+    switch(timeframe){
+
+        case "today":
+            getDataPromise = getBoughtEnergyToday();
+            break;
+        case "month":
+            getDataPromise = getBoughtEnergyThisMonth();
+            break;
+        
+        case "year":
+            getDataPromise = getBoughtEnergyThisYear();
+            break;
+
+        default:
+            console.error("wrong timeframe parameter!");
+            res.status(400).send("Wrong timeframe parameter! ");
+            return;
+
+    }
+
+    getDataPromise.then((value) => {
+
+        const producedEnergy = value;
+        co2Equivalent = calculateCO2Equivalent(producedEnergy);
+
+        const responseObject = {
+            emitted: co2Equivalent
+        }
+        res.status(200).send(responseObject);
+    }, (reason) => {
+        res.status(500).send(reason);
+    });
+
+});
+
 app.get('/balance', (req, res) => {
 
     const timeframe = req.query.timeframe;
@@ -316,6 +357,53 @@ app.get('/balance', (req, res) => {
 
         const responseObject = {
             balance: balance
+        }
+        res.status(200).send(responseObject);
+    }, (reason) => {
+        res.status(500).send(reason);
+    });
+
+});
+
+app.get('/systemRevenue', (req, res) => {
+
+    const timeframe = req.query.timeframe;
+
+    let getSoldDataPromise;
+    let getProducedDataPromise;
+
+    switch(timeframe){
+
+        case "today":
+            getSoldDataPromise = getSoldEnergyToday();
+            getProducedDataPromise = getProducedEnergyToday();
+            break;
+        case "month":
+            getSoldDataPromise = getSoldEnergyThisMonth();
+            getProducedDataPromise = getProducedEnergyThisMonth();
+            break;
+        
+        case "year":
+            getSoldDataPromise = getSoldEnergyThisYear();
+            getProducedDataPromise = getProducedEnergyThisYear();
+            break;
+
+        default:
+            console.error("wrong timeframe parameter!");
+            res.status(400).send("Wrong timeframe parameter! ");
+            return;
+
+    }
+
+    Promise.all([getSoldDataPromise, getProducedDataPromise]).then((values) => {
+
+        const soldEnergy = values[0];
+        const producedEnergy = values[1];
+
+        const revenue = calculateSystemRevenue(soldEnergy, producedEnergy);
+
+        const responseObject = {
+            systemRevenue: revenue
         }
         res.status(200).send(responseObject);
     }, (reason) => {

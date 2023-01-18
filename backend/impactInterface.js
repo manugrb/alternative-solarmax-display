@@ -33,3 +33,15 @@ function calculateBalance(boughtEnergy, soldEnergy){
 
 }
 exports.calculateBalance = calculateBalance;
+
+function calculateSystemRevenue(soldEnergy, producedEnergy){
+
+    const savedEnergy = producedEnergy - soldEnergy;
+    const savedMoney = calculateSavedMoney(savedEnergy);
+
+    const earnedMoney = calculateEarnedMoney(soldEnergy);
+
+    return savedMoney + earnedMoney;
+
+}
+exports.calculateSystemRevenue = calculateSystemRevenue;
