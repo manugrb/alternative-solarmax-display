@@ -1,3 +1,30 @@
 .container{
+    text-align: center;
+}
+.wrapper{
     display: flex;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.spacingDiv{
+    padding: 4px 6px;
+}
+
+.timeframeButton{
+    border: solid;
+    border-color: gray;
+    border-width: 2px;
+    border-radius: 8px;
+    background: var(--background-color-highlight-elements);
+    color: var(--font-color-important);
+    font-size: 16px;
+    font-weight: 600;
+    padding: 4px 8px;
+}
+
+.timeframeButton:hover{
+    border-color: lightgray;
+    background-color: var(--background-color-highlight-elements-activated);
+    cursor: pointer;
 }

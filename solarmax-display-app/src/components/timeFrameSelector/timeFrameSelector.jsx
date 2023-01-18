@@ -13,7 +13,11 @@ const TimeFrameSelector = (props) => {
                 const propsFunction = timeframe.onClickFunction;
                 propsFunction(timeframe.argument);
             }
-            return <button onClick={onclick}>{timeframeName}</button>
+            return (
+                <div className='spacingDiv'>
+                    <button className='timeframeButton' onClick={onclick}>{timeframeName}</button>
+                </div>
+            );
     
         });
 
@@ -22,8 +26,9 @@ const TimeFrameSelector = (props) => {
 
     return (
         <div className="container">
-
-            {getButtons()}
+            <div className='wrapper'>
+                {getButtons()}
+            </div>
 
         </div>
     );

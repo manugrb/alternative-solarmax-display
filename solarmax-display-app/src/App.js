@@ -147,7 +147,7 @@ const App = () => {
 
           <div className="energyMeterContainer">
             <TimeFrameSelector timeframes={[{
-              "timeframe": "today",
+              "timeframe": "Today",
               "onClickFunction": setTimeframeState,
               "argument": "today"
             }, {

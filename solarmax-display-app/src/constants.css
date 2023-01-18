@@ -1,5 +1,7 @@
 :root{
     --background-color: #090909;
+    --background-color-highlight-elements: #1f1f1f;
+    --background-color-highlight-elements-activated: #2f2f2f;
 
     --font-color-important: #ffffff;
     --font-color-mid-priority: #f0f0f0;
