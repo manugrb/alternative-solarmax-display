@@ -24,14 +24,12 @@ function calculateSpentMoney(energy){
 }
 exports.calculateSpentMoney = calculateSpentMoney;
 
-function calculateBalance(boughtEnergy, soldEnergy, producedEnergy){
+function calculateBalance(boughtEnergy, soldEnergy){
 
     const spentMoney = calculateSpentMoney(boughtEnergy);
     const earnedMoney = calculateEarnedMoney(soldEnergy);
-    const savedGridEnergy = producedEnergy - soldEnergy;
-    const savedMoney = calculateSavedMoney(savedGridEnergy);
 
-    return (savedMoney + earnedMoney) - spentMoney;
+    return earnedMoney - spentMoney;
 
 }
 exports.calculateBalance = calculateBalance;
