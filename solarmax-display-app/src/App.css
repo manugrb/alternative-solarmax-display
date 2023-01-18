@@ -63,3 +63,10 @@
   border-radius: 8px;
   text-align: center;
 }
+
+.impactMeterContainer{
+  text-align: center;
+  display: inline-block;
+  width: min-content;
+  margin: 4px 24px;
+}

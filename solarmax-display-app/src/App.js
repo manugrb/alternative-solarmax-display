@@ -5,6 +5,7 @@ import BatteryMonitor from './components/batteryMonitor/batteryMonitor';
 import React, { useEffect, useState } from 'react';
 import EnergyMeter from './components/energyMeter/energyMeter';
 import TimeFrameSelector from './components/timeFrameSelector/timeFrameSelector';
+import ImpactMeter from './components/impactMeter/impactMeter';
 
 
 const App = () => {
@@ -20,10 +21,17 @@ const App = () => {
     const [boughtEnergyState, setBoughtEnergyState] = useState(0);
     const [soldEnergyState, setSoldEnergyState] = useState(0);
 
+    const [savedCO2State, setSavedCO2State] = useState(0.0);
+    const [emittedCO2State, setEmittedCo2State] = useState(0.0);
+    const [systemRevenueState, setSystemRevenueState] = useState(0.0);
+    const [balanceState, setBalanceState] = useState(0.0);
+    const [balanceUnitState, setBalanceUnitState] = useState("€");
+
     const [timeframeState, setTimeframeState] = useState("today");
 
     const [updateInterval, setUpdateInterval] = useState();
     const [energyUpdateInterval, setEnergyUpdateInterval] = useState();
+
     let continouslyFetchingData = false;
 
   function getBatteryFillPercentage(batteryCharge, batteryCapacity){
@@ -35,12 +43,14 @@ const App = () => {
   useEffect(() => {
 
     updateEnergyValues();
+    updateImpactValues();
 
     if(!continouslyFetchingData){
 
         setEnergyUpdateInterval(setInterval(() => {
 
           updateEnergyValues();
+          updateImpactValues();
 
         }, 60 * 10 * 1000));
      
@@ -88,6 +98,7 @@ const App = () => {
 
   useEffect(() => {
     updateEnergyValues();
+    updateImpactValues();
   }, [timeframeState]);
 
   function updateEnergyValues(){
@@ -119,6 +130,38 @@ const App = () => {
     });
 
   }
+
+  function updateImpactValues(){
+
+    fetch('http://192.168.179.17:3001/savedCO2?timeframe=' + timeframeState).then((value) => {
+      return value.json();
+    }).then((value) => {
+      console.log(JSON.stringify(value));
+      setSavedCO2State(value['savedCO2']);
+    });
+
+    fetch('http://192.168.179.17:3001/emittedCO2?timeframe=' + timeframeState).then((value) => {
+      return value.json();
+    }).then((value) => {
+      console.log(JSON.stringify(value));
+      setEmittedCo2State(value['emitted']);
+    });
+
+    fetch('http://192.168.179.17:3001/systemRevenue?timeframe=' + timeframeState).then((value) => {
+      return value.json();
+    }).then((value) => {
+      console.log(JSON.stringify(value));
+      setSystemRevenueState(value['systemRevenue']);
+    });
+
+    fetch('http://192.168.179.17:3001/balance?timeframe=' + timeframeState).then((value) => {
+      return value.json();
+    }).then((value) => {
+      console.log(JSON.stringify(value));
+      setBalanceState(value['balance']);
+    });
+
+  }  
 
   return (
     <div>
@@ -168,7 +211,16 @@ const App = () => {
         </div>
 
         <div className="impact">
-            <h2>Impact (not yet implemented)</h2>
+            <h2>Impact</h2>
+
+            <div className='impactMeterContainer'>
+
+              <ImpactMeter value={savedCO2State / 1000} unit={'kg'} name={'saved CO2'} />
+              <ImpactMeter value={emittedCO2State / 1000} unit={'kg'} name={'emitted CO2'} />
+              <ImpactMeter value={systemRevenueState} unit={'€'} name={'System Revenue'} />
+              <ImpactMeter value={balanceState} unit={'€'} name={'balance'} />
+
+            </div>
         </div>
 
       </div>
