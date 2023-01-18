@@ -4,7 +4,7 @@
 const { default: fetch } = require("node-fetch");
 const { getProducedEnergyToday, getProducedEnergyThisMonth, getProducedEnergyThisYear, getUsedEnergyToday, getUsedEnergyThisMonth, getUsedEnergyThisYear, getBoughtEnergyThisMonth, getBoughtEnergyToday, getBoughtEnergyThisYear, getSoldEnergyToday, getSoldEnergyThisMonth, getSoldEnergyThisYear } = require("../databaseDataAdapter");
 const { setInverterDataTableName, getEntriesBetweenMoments, connect, getEntriesInInterval, getEntriesSince } = require("../databaseInterface");
-const { calculateCO2Equivalent, calculateBalance } = require("../impactInterface");
+const { calculateCO2Equivalent, calculateBalance, calculateSystemRevenue } = require("../impactInterface");
 
 describe("app.js unit test", () => {
 
@@ -402,6 +402,51 @@ describe("app.js unit test", () => {
             expect(values[0].balance).toBe(values[1]);
             expect(values[2].balance).toBe(values[3]);
             expect(values[4].balance).toBe(values[5]);
+
+        });
+
+    });
+
+    it("returns the right value for systemRevenue", () => {
+
+        const todayUrl = "http://localhost:" + PORT + "/systemRevenue?timeframe=today";
+        const monthUrl = "http://localhost:" + PORT + "/systemRevenue?timeframe=month";
+        const yearUrl = "http://localhost:" + PORT + "/systemRevenue?timeframe=year";
+
+        const firstTodayResponsePromise = fetch(todayUrl).then((value) => {
+            return value.json();
+        });
+
+        const firstMonthResponsePromise = fetch(monthUrl).then((value) => {
+            return value.json();
+        });
+        const firstYearResponsePromise = fetch(yearUrl).then((value) => {
+            return value.json();
+        });
+
+        const todaySoldEnergyPromise = getSoldEnergyToday();
+        const todayProducedEnergyPromise = getProducedEnergyToday();
+        const todayExpectedValuePromise = Promise.all([todaySoldEnergyPromise, todayProducedEnergyPromise]).then((values) => {
+            return calculateSystemRevenue(values[0], values[1]);
+        });
+
+        const monthSoldEnergyPromise = getSoldEnergyThisMonth();
+        const monthProducedEnergyPromise = getProducedEnergyThisMonth();
+        const monthExpectedValuePromise = Promise.all([monthSoldEnergyPromise, monthProducedEnergyPromise]).then((values) => {
+            return calculateSystemRevenue(values[0], values[1]);
+        });
+
+        const yearSoldEnergyPromise = getSoldEnergyThisYear();
+        const yearProducedEnergyPromise = getProducedEnergyThisYear();
+        const yearExpectedValuePromise = Promise.all([yearSoldEnergyPromise, yearProducedEnergyPromise]).then((values) => {
+            return calculateSystemRevenue(values[0], values[1]);
+        });
+
+        return Promise.all([firstTodayResponsePromise, todayExpectedValuePromise, firstMonthResponsePromise, monthExpectedValuePromise, firstYearResponsePromise, yearExpectedValuePromise]).then((values) => {
+
+            expect(values[0].systemRevenue).toBe(values[1]);
+            expect(values[2].systemRevenue).toBe(values[3]);
+            expect(values[4].systemRevenue).toBe(values[5]);
 
         });
 

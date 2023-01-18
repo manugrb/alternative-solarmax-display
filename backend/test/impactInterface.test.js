@@ -3,7 +3,7 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-const { calculateCO2Equivalent, calculateSpentMoney, calculateSavedMoney, calculateBalance, calculateEarnedMoney } = require("../impactInterface");
+const { calculateCO2Equivalent, calculateSpentMoney, calculateSavedMoney, calculateBalance, calculateEarnedMoney, calculateSystemRevenue } = require("../impactInterface");
 
 
 describe('impactInterface unit test', () => {
@@ -56,12 +56,26 @@ describe('impactInterface unit test', () => {
         const emptyBalance = calculateBalance(0, 0);
         expect(emptyBalance).toBe(0);
 
-        const nonEmptyBalance = calculateBalance(25000, 25000, 50000);
+        const nonEmptyBalance = calculateBalance(25000, 25000);
         const earnedMoney = calculateEarnedMoney(25000);
         const spentMoney = calculateSpentMoney(25000);
         const expectedValue = earnedMoney - spentMoney;
 
         expect(nonEmptyBalance).toBe(expectedValue);
+
+    });
+
+    it('calcultaes the system revenue correctly', () => {
+
+        const emptyRevenue = calculateSystemRevenue(0, 0);
+        expect(emptyRevenue).toBe(0);
+
+        const nonEmptyRevenue = calculateSystemRevenue(25000, 50000);
+        const savedMoney = calculateSavedMoney(25000);
+        const earnedMoney = calculateEarnedMoney(25000);
+        const expectedValue = savedMoney + earnedMoney;
+
+        expect(nonEmptyRevenue).toBe(expectedValue);
 
     });
 
