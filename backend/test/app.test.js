@@ -4,7 +4,7 @@
 const { default: fetch } = require("node-fetch");
 const { getProducedEnergyToday, getProducedEnergyThisMonth, getProducedEnergyThisYear, getUsedEnergyToday, getUsedEnergyThisMonth, getUsedEnergyThisYear, getBoughtEnergyThisMonth, getBoughtEnergyToday, getBoughtEnergyThisYear, getSoldEnergyToday, getSoldEnergyThisMonth, getSoldEnergyThisYear } = require("../databaseDataAdapter");
 const { setInverterDataTableName, getEntriesBetweenMoments, connect, getEntriesInInterval, getEntriesSince } = require("../databaseInterface");
-const { calculateCO2Equivalent } = require("../impactInterface");
+const { calculateCO2Equivalent, calculateBalance } = require("../impactInterface");
 
 describe("app.js unit test", () => {
 
@@ -379,16 +379,22 @@ describe("app.js unit test", () => {
             return value.json();
         });
 
-        const todayExpectedValuePromise = getProducedEnergyToday().then((value) => {
-            return calculateCO2Equivalent(value);
+        const todayBoughtEnergyPromise = getBoughtEnergyToday();
+        const todaySoldEnergyPromise = getSoldEnergyToday();
+        const todayExpectedValuePromise = Promise.all([todayBoughtEnergyPromise, todaySoldEnergyPromise]).then((values) => {
+            return calculateBalance(values[0], values[1]);
         });
 
-        const monthExpectedValuePromise = getProducedEnergyThisMonth().then((value) => {
-            return calculateCO2Equivalent(value);
+        const monthBoughtEnergyPromise = getBoughtEnergyThisMonth();
+        const monthSoldEnergyPromise = getSoldEnergyThisMonth();
+        const monthExpectedValuePromise = Promise.all([monthBoughtEnergyPromise, monthSoldEnergyPromise]).then((values) => {
+            return calculateBalance(values[0], values[1]);
         });
 
-        const yearExpectedValuePromise = getProducedEnergyThisYear().then((value) => {
-            return calculateCO2Equivalent(value);
+        const yearBoughtEnergyPromise = getBoughtEnergyThisYear();
+        const yearSoldEnergyPromise = getSoldEnergyThisYear();
+        const yearExpectedValuePromise = Promise.all([yearBoughtEnergyPromise, yearSoldEnergyPromise]).then((values) => {
+            return calculateBalance(values[0], values[1]);
         });
 
         return Promise.all([firstTodayResponsePromise, todayExpectedValuePromise, firstMonthResponsePromise, monthExpectedValuePromise, firstYearResponsePromise, yearExpectedValuePromise]).then((values) => {
