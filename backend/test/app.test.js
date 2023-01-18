@@ -4,6 +4,7 @@
 const { default: fetch } = require("node-fetch");
 const { getProducedEnergyToday, getProducedEnergyThisMonth, getProducedEnergyThisYear, getUsedEnergyToday, getUsedEnergyThisMonth, getUsedEnergyThisYear, getBoughtEnergyThisMonth, getBoughtEnergyToday, getBoughtEnergyThisYear, getSoldEnergyToday, getSoldEnergyThisMonth, getSoldEnergyThisYear } = require("../databaseDataAdapter");
 const { setInverterDataTableName, getEntriesBetweenMoments, connect, getEntriesInInterval, getEntriesSince } = require("../databaseInterface");
+const { calculateCO2Equivalent } = require("../impactInterface");
 
 describe("app.js unit test", () => {
 
@@ -318,6 +319,84 @@ describe("app.js unit test", () => {
 
         return Promise.all([responsePromise, expectedValuePromise]).then((values) => {
             expect(values[0]).toBe(values[1]);
+        });
+
+    });
+
+    it("returns the right value for the saved CO2", () => {
+
+        const todayUrl = "http://localhost:" + PORT + "/savedCO2?timeframe=today";
+        const monthUrl = "http://localhost:" + PORT + "/savedCO2?timeframe=month";
+        const yearUrl = "http://localhost:" + PORT + "/savedCO2?timeframe=year";
+
+        const firstTodayResponsePromise = fetch(todayUrl).then((value) => {
+            return value.json();
+        });
+
+        const firstMonthResponsePromise = fetch(monthUrl).then((value) => {
+            return value.json();
+        });
+        const firstYearResponsePromise = fetch(yearUrl).then((value) => {
+            return value.json();
+        });
+
+        const todayExpectedValuePromise = getProducedEnergyToday().then((value) => {
+            return calculateCO2Equivalent(value);
+        });
+
+        const monthExpectedValuePromise = getProducedEnergyThisMonth().then((value) => {
+            return calculateCO2Equivalent(value);
+        });
+
+        const yearExpectedValuePromise = getProducedEnergyThisYear().then((value) => {
+            return calculateCO2Equivalent(value);
+        });
+
+        return Promise.all([firstTodayResponsePromise, todayExpectedValuePromise, firstMonthResponsePromise, monthExpectedValuePromise, firstYearResponsePromise, yearExpectedValuePromise]).then((values) => {
+
+            expect(values[0].savedCO2).toBe(values[1]);
+            expect(values[2].savedCO2).toBe(values[3]);
+            expect(values[4].savedCO2).toBe(values[5]);
+
+        });
+
+    });
+
+    it("returns the right value for balance", () => {
+
+        const todayUrl = "http://localhost:" + PORT + "/balance?timeframe=today";
+        const monthUrl = "http://localhost:" + PORT + "/balance?timeframe=month";
+        const yearUrl = "http://localhost:" + PORT + "/balance?timeframe=year";
+
+        const firstTodayResponsePromise = fetch(todayUrl).then((value) => {
+            return value.json();
+        });
+
+        const firstMonthResponsePromise = fetch(monthUrl).then((value) => {
+            return value.json();
+        });
+        const firstYearResponsePromise = fetch(yearUrl).then((value) => {
+            return value.json();
+        });
+
+        const todayExpectedValuePromise = getProducedEnergyToday().then((value) => {
+            return calculateCO2Equivalent(value);
+        });
+
+        const monthExpectedValuePromise = getProducedEnergyThisMonth().then((value) => {
+            return calculateCO2Equivalent(value);
+        });
+
+        const yearExpectedValuePromise = getProducedEnergyThisYear().then((value) => {
+            return calculateCO2Equivalent(value);
+        });
+
+        return Promise.all([firstTodayResponsePromise, todayExpectedValuePromise, firstMonthResponsePromise, monthExpectedValuePromise, firstYearResponsePromise, yearExpectedValuePromise]).then((values) => {
+
+            expect(values[0].balance).toBe(values[1]);
+            expect(values[2].balance).toBe(values[3]);
+            expect(values[4].balance).toBe(values[5]);
+
         });
 
     });

@@ -53,14 +53,13 @@ describe('impactInterface unit test', () => {
 
     it('calculates the balance correctly', () => {
 
-        const emptyBalance = calculateBalance(0, 0, 0);
+        const emptyBalance = calculateBalance(0, 0);
         expect(emptyBalance).toBe(0);
 
         const nonEmptyBalance = calculateBalance(25000, 25000, 50000);
-        const savedMoney = calculateSavedMoney(25000);
         const earnedMoney = calculateEarnedMoney(25000);
         const spentMoney = calculateSpentMoney(25000);
-        const expectedValue = (savedMoney + earnedMoney) - spentMoney;
+        const expectedValue = earnedMoney - spentMoney;
 
         expect(nonEmptyBalance).toBe(expectedValue);
 

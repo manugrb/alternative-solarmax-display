@@ -283,25 +283,21 @@ app.get('/balance', (req, res) => {
 
     let getBoughtDataPromise;
     let getSoldDataPromise;
-    let getProducedDataPromise;
 
     switch(timeframe){
 
         case "today":
             getBoughtDataPromise = getBoughtEnergyToday();
             getSoldDataPromise = getSoldEnergyToday();
-            getProducedDataPromise = getProducedEnergyToday();
             break;
         case "month":
             getBoughtDataPromise = getBoughtEnergyThisMonth();
             getSoldDataPromise = getSoldEnergyThisMonth();
-            getProducedDataPromise = getProducedEnergyThisMonth();
             break;
         
         case "year":
             getBoughtDataPromise = getBoughtEnergyThisYear();
             getSoldDataPromise = getSoldEnergyThisYear();
-            getProducedDataPromise = getProducedEnergyThisYear();
             break;
 
         default:
@@ -311,13 +307,12 @@ app.get('/balance', (req, res) => {
 
     }
 
-    Promise.all([getBoughtDataPromise, getSoldDataPromise, getProducedDataPromise]).then((values) => {
+    Promise.all([getBoughtDataPromise, getSoldDataPromise]).then((values) => {
 
         const boughtEnergy = values[0];
         const soldEnergy = values[1];
-        const producedEnergy = values[2];
 
-        const balance = calculateBalance(boughtEnergy, soldEnergy, producedEnergy);
+        const balance = calculateBalance(boughtEnergy, soldEnergy);
 
         const responseObject = {
             balance: balance
