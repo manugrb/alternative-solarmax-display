@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import EnergyMeter from './components/energyMeter/energyMeter';
 import TimeFrameSelector from './components/timeFrameSelector/timeFrameSelector';
 import ImpactMeter from './components/impactMeter/impactMeter';
+import EnergySourceChart from './components/EnergySourceChart/energySourceChart';
 
 
 const App = () => {
@@ -207,6 +208,8 @@ const App = () => {
             <EnergyMeter energy={boughtEnergyState} name={"Today's Bought Energy"} />
             <EnergyMeter energy={soldEnergyState} name={"Today's Sold Energy"} />
           </div>
+
+          <EnergySourceChart />
 
         </div>
 
