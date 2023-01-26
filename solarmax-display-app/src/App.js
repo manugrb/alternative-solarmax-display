@@ -209,7 +209,11 @@ const App = () => {
             <EnergyMeter energy={soldEnergyState} name={"Today's Sold Energy"} />
           </div>
 
-          <EnergySourceChart />
+          <div className='energyDistributionContainer'>
+            <EnergySourceChart labels={['produced', 'bought']} datasetLabel={'Energy in Wh'} data={[producedEnergyState, boughtEnergyState]} />
+            <EnergySourceChart labels={['used', 'sold']} datasetLabel={'Energy in Wh'} data={[usedEnergyState, soldEnergyState]} />
+          </div>
+
 
         </div>
 
