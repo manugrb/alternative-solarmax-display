@@ -4,35 +4,37 @@ import { Doughnut } from 'react-chartjs-2';
 import './energySourceChart.css';
 import '../../constants.css';
 
-const EnergySourceChart = () => {
+const EnergySourceChart = (props) => {
 
     ChartJS.register(ArcElement, Tooltip, Legend);
 
-    const data = {
-        labels: ['Bought', 'Self produced'],
-        datasets: [
-            {
-                label: "# of tests",
-                data: [3700, 9000],
-                backgroundColor: [
-                    '#ff0000',
-                    '#00ff00'
-                ],
-                borderColor: [
-                    '#000000',
-                    '#222222',
-                    '#444444',
-                    '#666666',
-                    '#888888',
-                    '#aaaaaa'
-                ],
-                borderWidth: 1
-            }
-        ]
-    };
+    function createData(){
+
+        const data = {
+            labels: props.labels,
+            datasets: [
+                {
+                    label: props.datasetLabel,
+                    data: props.data,
+                    backgroundColor: [
+                        '#00ff00',
+                        '#ff0000'
+                    ],
+                    borderColor: [
+                        '#00ff00',
+                        '#ff0000'
+                    ],
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        return data;
+
+    }
 
     return (
-        <Doughnut data={data} />
+        <Doughnut data={createData()} />
     );
 }
  
