@@ -9,18 +9,14 @@ const EnergySourceChart = () => {
     ChartJS.register(ArcElement, Tooltip, Legend);
 
     const data = {
-        labels: ['helo', 'world', 'this', 'is', 'a', 'test'],
+        labels: ['Bought', 'Self produced'],
         datasets: [
             {
                 label: "# of tests",
-                data: [1, 2, 3, 4, 5, 6],
+                data: [3700, 9000],
                 backgroundColor: [
-                    '#f5d2a0',
-                    '#2f2f03',
-                    '#fa5409',
-                    '#03ff77',
-                    '#77f3d5',
-                    '#b2f999'
+                    '#ff0000',
+                    '#00ff00'
                 ],
                 borderColor: [
                     '#000000',
