@@ -59,10 +59,8 @@
 }
 
 *.energyDistributionContainer{
+  width: 50%;
   text-align: center;
-  display: inline-block;
-  width: min-content;
-  margin: 4px 24px;
 }
 
 .impact{
