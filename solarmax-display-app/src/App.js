@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import EnergyMeter from './components/energyMeter/energyMeter';
 import TimeFrameSelector from './components/timeFrameSelector/timeFrameSelector';
 import ImpactMeter from './components/impactMeter/impactMeter';
-import EnergySourceChart from './components/EnergySourceChart/energySourceChart';
+import EnergySourceChart from './components/EnergySourceChart/energyDistributionChart';
 
 
 const App = () => {

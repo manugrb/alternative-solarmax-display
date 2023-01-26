@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
-import './energySourceChart.css';
+import './energyDistributionChart.css';
 import '../../constants.css';
 
 const EnergySourceChart = (props) => {
