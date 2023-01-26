@@ -15,12 +15,12 @@ const EnergySourceChart = () => {
                 label: "# of tests",
                 data: [1, 2, 3, 4, 5, 6],
                 backgroundColor: [
-                    '#000000',
-                    '#222222',
-                    '#444444',
-                    '#666666',
-                    '#888888',
-                    '#aaaaaa'
+                    '#f5d2a0',
+                    '#2f2f03',
+                    '#fa5409',
+                    '#03ff77',
+                    '#77f3d5',
+                    '#b2f999'
                 ],
                 borderColor: [
                     '#000000',
