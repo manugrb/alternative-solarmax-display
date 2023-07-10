@@ -57,7 +57,7 @@ const App = () => {
      
         setUpdateInterval(setInterval(() => {
 
-          fetch('http://192.168.179.17:3001/general').then((value) => {
+          fetch('http://192.168.179.20:3001/general').then((value) => {
             console.log(value);
             return value.json();
           }).then((value) => {
@@ -104,7 +104,7 @@ const App = () => {
 
   function updateEnergyValues(){
 
-    fetch('http://192.168.179.17:3001/producedPower?timeframe=' + timeframeState).then((value) => {
+    fetch('http://192.168.179.20:3001/producedPower?timeframe=' + timeframeState).then((value) => {
       console.log(value);
       return value.json();
     }).then((value) => {
@@ -112,19 +112,19 @@ const App = () => {
     });
 
 
-    fetch('http://192.168.179.17:3001/usedPower?timeframe=' + timeframeState).then((value) => {
+    fetch('http://192.168.179.20:3001/usedPower?timeframe=' + timeframeState).then((value) => {
       return value.json();
     }).then((value) => {
       setUsedEnergyState(value["usedEnergy"]);
     });
 
-    fetch('http://192.168.179.17:3001/boughtPower?timeframe=' + timeframeState).then((value) => {
+    fetch('http://192.168.179.20:3001/boughtPower?timeframe=' + timeframeState).then((value) => {
       return value.json();
     }).then((value) => {
       setBoughtEnergyState(value["boughtEnergy"]);
     });
 
-    fetch('http://192.168.179.17:3001/soldPower?timeframe=' + timeframeState).then((value) => {
+    fetch('http://192.168.179.20:3001/soldPower?timeframe=' + timeframeState).then((value) => {
       return value.json();
     }).then((value) => {
       setSoldEnergyState(value["soldEnergy"]);
@@ -134,28 +134,28 @@ const App = () => {
 
   function updateImpactValues(){
 
-    fetch('http://192.168.179.17:3001/savedCO2?timeframe=' + timeframeState).then((value) => {
+    fetch('http://192.168.179.20:3001/savedCO2?timeframe=' + timeframeState).then((value) => {
       return value.json();
     }).then((value) => {
       console.log(JSON.stringify(value));
       setSavedCO2State(value['savedCO2']);
     });
 
-    fetch('http://192.168.179.17:3001/emittedCO2?timeframe=' + timeframeState).then((value) => {
+    fetch('http://192.168.179.20:3001/emittedCO2?timeframe=' + timeframeState).then((value) => {
       return value.json();
     }).then((value) => {
       console.log(JSON.stringify(value));
       setEmittedCo2State(value['emitted']);
     });
 
-    fetch('http://192.168.179.17:3001/systemRevenue?timeframe=' + timeframeState).then((value) => {
+    fetch('http://192.168.179.20:3001/systemRevenue?timeframe=' + timeframeState).then((value) => {
       return value.json();
     }).then((value) => {
       console.log(JSON.stringify(value));
       setSystemRevenueState(value['systemRevenue']);
     });
 
-    fetch('http://192.168.179.17:3001/balance?timeframe=' + timeframeState).then((value) => {
+    fetch('http://192.168.179.20:3001/balance?timeframe=' + timeframeState).then((value) => {
       return value.json();
     }).then((value) => {
       console.log(JSON.stringify(value));
