@@ -53,7 +53,7 @@ const App = () => {
           updateEnergyValues();
           updateImpactValues();
 
-        }, 60 * 10 * 1000));
+        }, 60 * 1000));
      
         setUpdateInterval(setInterval(() => {
 
