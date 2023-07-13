@@ -39,11 +39,11 @@ function getInverterJson(){
 exports.getInverterJson = getInverterJson;
 
 
-function getHistoricData(){
+function getHistoricData(dateString){
 
     const historicInverterDataPromise = new Promise((resolve, reject) => {
 
-        datafetcher.getRawHistoricInverterData().then((value) => {
+        datafetcher.getRawHistoricInverterData(dateString).then((value) => {
 
             jsonData = JSON.parse(value.trim());
 
