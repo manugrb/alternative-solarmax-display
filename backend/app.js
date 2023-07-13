@@ -412,6 +412,14 @@ app.get('/systemRevenue', (req, res) => {
 
 });
 
+app.get('/historicInverter', (req, res) => {
+
+    inverterInterface.getHistoricData().then((value) => {
+        res.status(200).send(value);
+    });
+
+})
+
 prepareForTracking().then(() => {
     startAllIntervals();
 }, (reason) => {

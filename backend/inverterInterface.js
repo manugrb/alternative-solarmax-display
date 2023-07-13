@@ -37,3 +37,36 @@ function getInverterJson(){
 }
 
 exports.getInverterJson = getInverterJson;
+
+
+function getHistoricData(){
+
+    const historicInverterDataPromise = new Promise((resolve, reject) => {
+
+        datafetcher.getRawHistoricInverterData().then((value) => {
+
+            jsonData = JSON.parse(value.trim());
+
+            const solarPower = jsonData[0];
+            const housePowerUsage = jsonData[1];
+            const gridPower = jsonData[2];
+            const batteryPower = jsonData[3];
+
+            const historicJson = {
+                "solarPower": solarPower,
+                "housePower": housePowerUsage,
+                "gridPower": gridPower,
+                "batteryPower": batteryPower
+            }
+            
+            resolve(historicJson);
+
+        });
+
+    });
+
+    return historicInverterDataPromise;
+
+}
+
+exports.getHistoricData = getHistoricData;
